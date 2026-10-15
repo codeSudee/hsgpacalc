@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+import { useT, getLang, localePath } from '../i18n';
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang).notFound;
+---
+<Layout title={t.title} description={t.description} path="/404/" noindex>
+  <SiteHeader />
+  <main id="main" class="wrap py-20 text-center md:py-32">
+    <p class="eyebrow m-0">{t.eyebrow}</p>
+    <h1 class="mx-auto mt-4">{t.h1}</h1>
+    <p class="mx-auto mt-4 max-w-[46ch] text-base leading-6">{t.text}</p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a href={localePath(lang, '/')} class="btn btn-primary no-underline">{t.home}</a>
+      <a href={localePath(lang, '/contact/')} class="btn no-underline">{t.contact}</a>
+    </div>
+  </main>
+  <SiteFooter />
+</Layout>

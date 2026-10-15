@@ -1,12 +1,15 @@
 ---
 import '../styles/global.css';
 import Seo from '../components/Seo.astro';
+import { useT, getLang } from '../i18n';
 
 interface Props { title?: string; description?: string; path?: string; noindex?: boolean; }
 const { title, description, path, noindex } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
 ---
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -38,7 +41,7 @@ const { title, description, path, noindex } = Astro.props;
     </script>
   </head>
   <body>
-    <a class="skip" href="#calculator">Skip to calculator</a>
+    <a class="skip" href="#calculator">{t.skip}</a>
     <slot />
     <script>
       import Lenis from 'lenis';

@@ -1,7 +1,6 @@
 ---
-import {
-  SITE_URL, SITE_NAME, DEFAULT_TITLE, DEFAULT_DESCRIPTION, OG_IMAGE, OG_IMAGE_ALT,
-} from '../data/seo';
+import { SITE_URL, SITE_NAME, OG_IMAGE } from '../data/seo';
+import { useT, getLang, localePath, LANGS, HREFLANG } from '../i18n';
 
 interface Props {
   title?: string;
@@ -10,15 +9,24 @@ interface Props {
   image?: string;
   noindex?: boolean;
 }
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
 const {
-  title = DEFAULT_TITLE,
-  description = DEFAULT_DESCRIPTION,
+  title = t.seo.title,
+  description = t.seo.description,
   path = '/',
   image = OG_IMAGE,
   noindex = false,
 } = Astro.props;
 
-const canonical = new URL(path, SITE_URL).href;
+const canonical = new URL(localePath(lang, path), SITE_URL).href;
+const alternates = noindex
+  ? []
+  : [
+      ...LANGS.map((l) => ({ hreflang: HREFLANG[l], href: new URL(localePath(l, path), SITE_URL).href })),
+      { hreflang: 'x-default', href: new URL(path, SITE_URL).href },
+    ];
+const otherLocales = LANGS.filter((l) => l !== lang).map((l) => useT(l).ogLocale);
 const imageUrl = new URL(image, SITE_URL).href;
 
 const jsonLd = {
@@ -27,14 +35,14 @@ const jsonLd = {
     {
       '@type': 'WebApplication',
       '@id': `${SITE_URL}/#app`,
-      name: 'High School GPA Calculator',
+      name: t.seo.appName,
       alternateName: SITE_NAME,
       url: canonical,
       description,
       applicationCategory: 'EducationalApplication',
       operatingSystem: 'Any',
       browserRequirements: 'Requires JavaScript',
-      inLanguage: 'en-US',
+      inLanguage: HREFLANG[lang],
       isAccessibleForFree: true,
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
       publisher: { '@id': `${SITE_URL}/#org` },
@@ -44,8 +52,8 @@ const jsonLd = {
       '@id': `${SITE_URL}/#website`,
       url: SITE_URL,
       name: SITE_NAME,
-      description: DEFAULT_DESCRIPTION,
-      inLanguage: 'en-US',
+      description: t.seo.description,
+      inLanguage: HREFLANG[lang],
       publisher: { '@id': `${SITE_URL}/#org` },
     },
     {
@@ -62,6 +70,7 @@ const jsonLd = {
 <title>{title}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
+{alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
 <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1'} />
 <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
@@ -79,13 +88,14 @@ const jsonLd = {
 <meta property="og:image" content={imageUrl} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content={OG_IMAGE_ALT} />
-<meta property="og:locale" content="en_US" />
+<meta property="og:image:alt" content={t.seo.imageAlt} />
+<meta property="og:locale" content={t.ogLocale} />
+{!noindex && otherLocales.map((l) => <meta property="og:locale:alternate" content={l} />)}
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={imageUrl} />
-<meta name="twitter:image:alt" content={OG_IMAGE_ALT} />
+<meta name="twitter:image:alt" content={t.seo.imageAlt} />
 
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

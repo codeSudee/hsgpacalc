@@ -1,0 +1,30 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import { es } from '../../i18n/es';
+const email = 'contact@hsgpacalc.com';
+const f = es.contactForm;
+---
+<PageLayout title="Contacto | HS GPA Calc | Preguntas y comentarios" description="Contacta al equipo de HS GPA Calc con preguntas, reportes de errores o ideas para nuestra calculadora de GPA de high school gratis." path="/contact/" heading="Contáctanos">
+  <p>¿Encontraste un error, viste un cálculo que no cuadra o tienes una idea para la calculadora? Nos gustaría saberlo.</p>
+  <p>Escríbenos a <a href={`mailto:${email}`}>{email}</a>, o usa el formulario de abajo para abrir un mensaje en tu app de correo. Puedes escribirnos en español o en inglés.</p>
+  <form id="contact-form" class="card mt-8 grid gap-4 p-5">
+    <label class="grid gap-1.5 text-sm font-medium text-[var(--ink)]">{f.name}
+      <input name="name" autocomplete="name" required class="field" />
+    </label>
+    <label class="grid gap-1.5 text-sm font-medium text-[var(--ink)]">{f.subject}
+      <input name="subject" autocomplete="off" required class="field" />
+    </label>
+    <label class="grid gap-1.5 text-sm font-medium text-[var(--ink)]">{f.message}
+      <textarea name="message" rows="6" required class="field"></textarea>
+    </label>
+    <button type="submit" class="btn btn-primary justify-self-start">{f.submit}</button>
+  </form>
+  <script define:vars={{ email }}>
+    document.getElementById('contact-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const f = new FormData(e.target);
+      const body = `${f.get('message')}\n\n— ${f.get('name')}`;
+      location.href = `mailto:${email}?subject=${encodeURIComponent(f.get('subject'))}&body=${encodeURIComponent(body)}`;
+    });
+  </script>
+</PageLayout>

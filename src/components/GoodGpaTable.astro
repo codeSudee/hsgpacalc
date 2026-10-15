@@ -1,23 +1,18 @@
 ---
-const rows = [
-  { min: 3.9, max: 99, range: '3.9–4.0+', label: 'Exceptional', note: 'Competitive for the most selective colleges and top scholarships.' },
-  { min: 3.5, max: 3.9, range: '3.5–3.89', label: 'Excellent', note: 'Strong for most selective schools; on track for honor roll and merit aid.' },
-  { min: 3.0, max: 3.5, range: '3.0–3.49', label: 'Good', note: 'Above the national average (about 3.0). Solid for many public universities.' },
-  { min: 2.5, max: 3.0, range: '2.5–2.99', label: 'Average', note: 'Meets requirements for many colleges. Upward trend helps.' },
-  { min: 2.0, max: 2.5, range: '2.0–2.49', label: 'Below average', note: 'Community college and open-admission paths are open; focus on raising grades.' },
-  { min: 0, max: 2.0, range: 'Below 2.0', label: 'Needs improvement', note: 'May affect graduation or eligibility. Talk to a counselor about a recovery plan.' },
-];
+import { useT } from '../i18n';
+const t = useT(Astro.currentLocale).good;
+const rows = t.rows;
 ---
 <section aria-labelledby="good-gpa-h" class="card overflow-hidden">
   <div class="p-5 md:p-6">
-    <p class="eyebrow m-0">Interpretation</p>
-    <h2 id="good-gpa-h" class="mt-2">What is a good GPA?</h2>
-    <p class="mt-2 mb-0 max-w-[60ch]">Your unweighted GPA is compared against the ranges below. The row matching your result is highlighted once you enter grades.</p>
+    <p class="eyebrow m-0">{t.eyebrow}</p>
+    <h2 id="good-gpa-h" class="mt-2">{t.heading}</h2>
+    <p class="mt-2 mb-0 max-w-[60ch]">{t.intro}</p>
   </div>
   <div class="overflow-x-auto">
     <table class="tbl">
-      <caption class="sr-only">Unweighted GPA ranges and what they mean</caption>
-      <thead><tr><th scope="col">GPA</th><th scope="col">Rating</th><th scope="col">What it means</th></tr></thead>
+      <caption class="sr-only">{t.caption}</caption>
+      <thead><tr><th scope="col">{t.thGpa}</th><th scope="col">{t.thRating}</th><th scope="col">{t.thMeaning}</th></tr></thead>
       <tbody>
         {rows.map((r) => (
           <tr data-good-row data-min={r.min} data-max={r.max}>

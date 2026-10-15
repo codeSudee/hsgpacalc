@@ -1,16 +1,19 @@
 ---
+import { useT, getLang, localePath } from '../i18n';
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
 const links = [
-  { href: '/about/', label: 'About Us' },
-  { href: '/contact/', label: 'Contact Us' },
-  { href: '/privacy-policy/', label: 'Privacy Policy' },
-  { href: '/terms-and-conditions/', label: 'Terms & Conditions' },
+  { href: localePath(lang, '/about/'), label: t.footer.about },
+  { href: localePath(lang, '/contact/'), label: t.footer.contact },
+  { href: localePath(lang, '/privacy-policy/'), label: t.footer.privacy },
+  { href: localePath(lang, '/terms-and-conditions/'), label: t.footer.terms },
 ];
 ---
 <footer class="site border-t border-[var(--hairline)]">
   <div class="wrap flex flex-col gap-4 py-10 text-[13px]">
-    <nav aria-label="Footer" class="flex flex-wrap gap-x-5 gap-y-2">
+    <nav aria-label={t.footer.nav} class="flex flex-wrap gap-x-5 gap-y-2">
       {links.map((l) => <a href={l.href}>{l.label}</a>)}
     </nav>
-    <p class="m-0">&copy; {new Date().getFullYear()} <span translate="no">HS GPA Calc</span>. Your grades are stored only in your browser. Results are estimates, so check your school's policy for your official GPA.</p>
+    <p class="m-0">&copy; {new Date().getFullYear()} <span translate="no">HS GPA Calc</span>. {t.footer.note}</p>
   </div>
 </footer>

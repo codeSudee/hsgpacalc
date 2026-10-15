@@ -33,9 +33,9 @@ export const SCALE_LABEL: Record<ScaleId, string> = { plus: 'plus/minus', plain:
 export const uid = () => Math.random().toString(36).slice(2, 9);
 export const newClass = (o: Partial<Cls> = {}): Cls => ({ id: uid(), name: '', level: 'reg', grade: '', credits: 1, exclude: false, ...o });
 export const newYear = (name: string, n = 3): Year => ({ id: uid(), name, classes: Array.from({ length: n }, () => newClass()) });
-export const fresh = (): State => ({
+export const fresh = (names: string[] = YEAR_NAMES): State => ({
   scale: 'plus', honors: DEFAULT_HONORS, ap: DEFAULT_AP, priorU: '', priorW: '', priorCr: '',
-  years: [newYear(YEAR_NAMES[0])], target: '', tCredits: '4', tType: 'u',
+  years: [newYear(names[0])], target: '', tCredits: '4', tType: 'u',
 });
 
 const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
@@ -150,24 +150,33 @@ const cell = (v: string | number) => {
   if (/^[=+\-@\t\r]/.test(t) && !/^-?\d+(\.\d+)?$/.test(t)) t = "'" + t; // spreadsheet formula injection guard
   return /[",\n\r]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t;
 };
-const LEVEL_NAME: Record<Level, string> = { reg: 'Regular', hon: 'Honors', ap: 'AP/IB/DE' };
-export function toCsv(s: State): string {
+export type CsvLabels = {
+  head: string[]; levels: Record<Level, string>; yes: string; no: string;
+  yearGpa: string; prior: string; cumulative: string; scaleLine: string; scale: Record<ScaleId, string>;
+};
+export const CSV_EN: CsvLabels = {
+  head: ['Year', 'Class', 'Level', 'Grade', 'Credits', 'Counted', 'Unweighted points', 'Weighted points'],
+  levels: { reg: 'Regular', hon: 'Honors', ap: 'AP/IB/DE' },
+  yes: 'yes', no: 'no', yearGpa: '{name} GPA', prior: 'Prior GPA', cumulative: 'Cumulative GPA',
+  scaleLine: 'Scale: {scale}; Honors +{h}; AP/IB/DE +{a}', scale: SCALE_LABEL,
+};
+export function toCsv(s: State, L: CsvLabels = CSV_EN): string {
   const f = (n: number | null) => (n === null ? '' : n.toFixed(2));
-  const rows: (string | number)[][] = [['Year', 'Class', 'Level', 'Grade', 'Credits', 'Counted', 'Unweighted points', 'Weighted points']];
+  const rows: (string | number)[][] = [L.head];
   for (const y of s.years) {
     for (const c of y.classes) {
       const counted = !!c.grade && !c.exclude && c.credits > 0;
       const p = c.grade ? pts(s.scale, c.grade) : null;
-      rows.push([y.name, c.name, LEVEL_NAME[c.level], c.grade, c.credits, counted ? 'yes' : 'no',
+      rows.push([y.name, c.name, L.levels[c.level], c.grade, c.credits, counted ? L.yes : L.no,
         p === null ? '' : f(p), p === null ? '' : f(p + (p > 0 ? bonusFor(s, c.level) : 0))]);
     }
   }
   rows.push([]);
-  for (const y of s.years) { const t = totals(s, y.classes); rows.push([`${y.name} GPA`, '', '', '', t.cr, '', f(gpa(t.qu, t.cr)), f(gpa(t.qw, t.cr))]); }
+  for (const y of s.years) { const t = totals(s, y.classes); rows.push([L.yearGpa.replace('{name}', y.name), '', '', '', t.cr, '', f(gpa(t.qu, t.cr)), f(gpa(t.qw, t.cr))]); }
   const p = prior(s);
-  if (p) rows.push(['Prior GPA', '', '', '', p.cr, '', f(p.u), f(p.w)]);
+  if (p) rows.push([L.prior, '', '', '', p.cr, '', f(p.u), f(p.w)]);
   const t = cumulative(s);
-  rows.push(['Cumulative GPA', '', '', '', t.cr, '', f(gpa(t.qu, t.cr)), f(gpa(t.qw, t.cr))]);
-  rows.push([`Scale: ${SCALE_LABEL[s.scale]}; Honors +${s.honors}; AP/IB/DE +${s.ap}`]);
+  rows.push([L.cumulative, '', '', '', t.cr, '', f(gpa(t.qu, t.cr)), f(gpa(t.qw, t.cr))]);
+  rows.push([L.scaleLine.replace('{scale}', L.scale[s.scale]).replace('{h}', String(s.honors)).replace('{a}', String(s.ap))]);
   return rows.map((r) => r.map(cell).join(',')).join('\r\n');
 }

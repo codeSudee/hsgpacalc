@@ -1,0 +1,53 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Calculator from './Calculator.astro';
+import GoodGpaTable from './GoodGpaTable.astro';
+import SeoContent from './SeoContent.astro';
+import SeoContentEs from './SeoContent.es.astro';
+import Faq from './Faq.astro';
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+import { useT, getLang, localePath } from '../i18n';
+
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
+const nav = [
+  { path: '/about/', label: t.footer.about },
+  { path: '/contact/', label: t.footer.contact },
+  { path: '/privacy-policy/', label: t.footer.privacy },
+  { path: '/terms-and-conditions/', label: t.footer.terms },
+];
+---
+<Layout path="/">
+  <SiteHeader />
+
+  <main id="main">
+    <section class="relative isolate overflow-hidden">
+      <div class="mesh" aria-hidden="true"></div>
+      <div class="wrap py-12 text-center md:py-20">
+        <p class="eyebrow m-0" data-hero>{t.home.eyebrow}</p>
+        <h1 class="mx-auto mt-4 max-w-[16ch]" data-hero>{t.home.h1}</h1>
+        <p class="mx-auto mt-4 mb-0 max-w-[58ch] text-base leading-6" data-hero>{t.home.lead}</p>
+        <nav aria-label={t.home.pagesNav} class="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm" data-hero>
+          {nav.map((l) => <a href={localePath(lang, l.path)}>{l.label}</a>)}
+        </nav>
+      </div>
+    </section>
+
+    <div class="wrap pb-16 md:pb-24">
+      <Calculator />
+      <div class="mt-16 md:mt-24"><GoodGpaTable /></div>
+      {lang === 'es' ? <SeoContentEs /> : <SeoContent />}
+      <Faq />
+    </div>
+  </main>
+
+  <SiteFooter />
+
+  <script>
+    import { gsap } from 'gsap';
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      gsap.from('[data-hero]', { opacity: 0, y: 14, duration: 0.6, stagger: 0.1, ease: 'power3.out', clearProps: 'all' });
+    }
+  </script>
+</Layout>

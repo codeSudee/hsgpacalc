@@ -1,32 +1,34 @@
 ---
 // Circular gauge 0.0 - 4.0. Outer ring = weighted (clamped at 4.0), inner ring = unweighted.
+import { useT } from '../i18n';
+const t = useT(Astro.currentLocale).calc;
 const R1 = 88, R2 = 68;
 const C1 = +(2 * Math.PI * R1).toFixed(2);
 const C2 = +(2 * Math.PI * R2).toFixed(2);
 ---
 <div class="flex flex-col items-center gap-4">
   <div class="relative w-full max-w-[240px]">
-    <svg viewBox="0 0 200 200" class="block w-full -rotate-90" role="img" aria-label="GPA gauge from 0.0 to 4.0. Outer ring is weighted GPA, inner ring is unweighted GPA." data-gauge>
+    <svg viewBox="0 0 200 200" class="block w-full -rotate-90" role="img" aria-label={t.gaugeAria} data-gauge>
       <circle cx="100" cy="100" r={R1} fill="none" stroke="var(--track)" stroke-width="10" />
       <circle cx="100" cy="100" r={R2} fill="none" stroke="var(--track)" stroke-width="10" />
       <circle data-g-w cx="100" cy="100" r={R1} fill="none" stroke="var(--ring-weighted)" stroke-width="10" stroke-linecap="round" stroke-dasharray={C1} stroke-dashoffset={C1} data-c={C1} />
       <circle data-g-u cx="100" cy="100" r={R2} fill="none" stroke="var(--ring-unweighted)" stroke-width="10" stroke-linecap="round" stroke-dasharray={C2} stroke-dashoffset={C2} data-c={C2} />
     </svg>
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-      <span class="eyebrow">Unweighted</span>
+      <span class="eyebrow">{t.unweighted}</span>
       <span class="num text-[40px] leading-none font-medium tracking-tight text-[var(--ink)]" data-gpa-u>--</span>
-      <span class="num mt-1 text-xs text-[var(--mute)]">of 4.0</span>
+      <span class="num mt-1 text-xs text-[var(--mute)]">{t.of40}</span>
     </div>
   </div>
   <dl class="grid w-full grid-cols-2 gap-3 text-center">
     <div class="rounded-md border border-[var(--hairline)] p-3">
-      <dt class="eyebrow flex items-center justify-center gap-2"><span class="inline-block size-2 rounded-full bg-[var(--ring-unweighted)]"></span>Unweighted</dt>
+      <dt class="eyebrow flex items-center justify-center gap-2"><span class="inline-block size-2 rounded-full bg-[var(--ring-unweighted)]"></span>{t.unweighted}</dt>
       <dd class="num m-0 mt-1 text-2xl font-medium text-[var(--ink)]" data-gpa-u2>--</dd>
     </div>
     <div class="rounded-md border border-[var(--hairline)] p-3">
-      <dt class="eyebrow flex items-center justify-center gap-2"><span class="inline-block size-2 rounded-full bg-[var(--ring-weighted)]"></span>Weighted</dt>
+      <dt class="eyebrow flex items-center justify-center gap-2"><span class="inline-block size-2 rounded-full bg-[var(--ring-weighted)]"></span>{t.weighted}</dt>
       <dd class="num m-0 mt-1 text-2xl font-medium text-[var(--ink)]" data-gpa-w>--</dd>
     </div>
   </dl>
-  <p class="m-0 text-xs text-[var(--mute)] num" data-gpa-meta>Add grades to see your GPA.</p>
+  <p class="m-0 text-xs text-[var(--mute)] num" data-gpa-meta>{t.gaugeEmpty}</p>
 </div>

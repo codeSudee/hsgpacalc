@@ -2,16 +2,18 @@
 import Layout from './Layout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import { useT } from '../i18n';
 
 interface Props { title: string; description: string; path: string; heading: string; updated?: string; noindex?: boolean; }
 const { title, description, path, heading, updated, noindex } = Astro.props;
+const t = useT(Astro.currentLocale);
 ---
 <Layout title={title} description={description} path={path} noindex={noindex}>
   <SiteHeader />
   <main id="main" class="wrap py-12 md:py-20">
     <article class="prose-page mx-auto max-w-[720px]">
       <h1 style="font-size:clamp(30px,5vw,44px)">{heading}</h1>
-      {updated && <p class="eyebrow mt-3">Last updated: {updated}</p>}
+      {updated && <p class="eyebrow mt-3">{t.lastUpdated} {updated}</p>}
       <slot />
     </article>
   </main>

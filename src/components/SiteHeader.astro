@@ -1,21 +1,28 @@
 ---
-const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+import { useT, getLang, localePath, stripLocale } from '../i18n';
+const lang = getLang(Astro.currentLocale);
+const t = useT(lang);
+const other = lang === 'en' ? 'es' : 'en';
+const base = stripLocale(Astro.url.pathname);
+const path = base.replace(/\/$/, '') || '/';
+const switchHref = localePath(other, base);
 const links = [
-  { href: '/about/', label: 'About' },
-  { href: '/contact/', label: 'Contact' },
+  { href: localePath(lang, '/about/'), base: '/about', label: t.header.about },
+  { href: localePath(lang, '/contact/'), base: '/contact', label: t.header.contact },
 ];
 ---
 <header class="site border-b border-[var(--hairline)] bg-[var(--canvas)]">
   <div class="wrap flex h-14 items-center justify-between">
-    <a href="/" class="flex items-center gap-2 font-semibold text-[var(--ink)] no-underline" style="letter-spacing:-0.02em">
+    <a href={localePath(lang, '/')} class="flex items-center gap-2 font-semibold text-[var(--ink)] no-underline" style="letter-spacing:-0.02em">
       <img src="/favicon-96x96.png" alt="" width="20" height="20" class="rounded" />
       <span translate="no">HS GPA Calc</span>
     </a>
     <div class="flex items-center gap-1">
-      <nav aria-label="Main" class="hidden items-center gap-1 sm:flex">
-        {links.map((l) => <a class="nav-link" href={l.href} aria-current={path === l.href.replace(/\/$/, '') ? 'page' : undefined}>{l.label}</a>)}
+      <nav aria-label={t.header.mainNav} class="hidden items-center gap-1 sm:flex">
+        {links.map((l) => <a class="nav-link" href={l.href} aria-current={path === l.base ? 'page' : undefined}>{l.label}</a>)}
       </nav>
-      <button type="button" class="btn btn-icon no-print" id="theme-toggle" aria-label="Toggle dark mode">
+      <a class="nav-link no-print" href={switchHref} hreflang={other} lang={other} aria-label={t.header.switchLabel}>{t.header.switchTo}</a>
+      <button type="button" class="btn btn-icon no-print" id="theme-toggle" aria-label={t.header.toggleTheme}>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M13.5 9.5A5.5 5.5 0 116.5 2.5a4.5 4.5 0 007 7z"/></svg>
       </button>
     </div>
