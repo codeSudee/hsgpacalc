@@ -114,6 +114,17 @@ function setNum(el: Element, v: number | null, animate: boolean) {
     onComplete: () => { el.textContent = fmt(v); shown.set(el, v); },
   });
 }
+/** Owl pose follows the weighted GPA: 3.7+ great, under 3.0 keep going, otherwise neutral. */
+const owl = $<SVGElement>('[data-owl]');
+const owlText = $('[data-owl-text]');
+function setOwl(w: number | null, animate: boolean) {
+  const pose = w === null ? 'neutral' : w >= 3.7 ? 'great' : w < 3 ? 'keep' : 'neutral';
+  const text = owlText.dataset[w === null ? 'tEmpty' : pose === 'great' ? 'tGreat' : pose === 'keep' ? 'tKeep' : 'tNeutral'] ?? '';
+  if (owlText.textContent !== text) owlText.textContent = text;
+  if (owl.dataset.pose === pose) return;
+  owl.dataset.pose = pose;
+  if (animate && !reduced) gsap.fromTo(owl, { scale: 0.88 }, { scale: 1, duration: 0.45, ease: 'back.out(2)', clearProps: 'transform' });
+}
 let wasGreat = false;
 /** One-shot glow on the weighted readout when it crosses up to 4.0. */
 function celebrate(w: number | null, animate: boolean) {
@@ -121,6 +132,15 @@ function celebrate(w: number | null, animate: boolean) {
   if (great && !wasGreat && animate && !reduced) {
     const box = $('[data-gpa-w]').parentElement!;
     box.classList.remove('glow-pulse'); void box.offsetWidth; box.classList.add('glow-pulse');
+    // Small, short burst; the library loads only the first time it is needed.
+    const r = box.getBoundingClientRect();
+    const css = getComputedStyle(document.documentElement);
+    import('canvas-confetti').then(({ default: confetti }) => confetti({
+      particleCount: 36, spread: 70, startVelocity: 24, ticks: 110, gravity: 1.1, scalar: 0.8,
+      origin: { x: (r.left + r.width / 2) / innerWidth, y: (r.top + r.height / 2) / innerHeight },
+      colors: [css.getPropertyValue('--ring-weighted').trim() || '#0070f3', css.getPropertyValue('--ink').trim() || '#171717', '#50e3c2'],
+      disableForReducedMotion: true,
+    }));
   }
   wasGreat = great;
 }
@@ -131,6 +151,7 @@ function refresh(animate = true, persist = true) {
   setNum($('[data-gpa-u]'), u, animate);
   setNum($('[data-gpa-u2]'), u, animate);
   setNum($('[data-gpa-w]'), w, animate);
+  setOwl(w, animate);
   celebrate(w, animate);
   const pr = prior(state);
   let meta = tot.n || pr

@@ -82,6 +82,10 @@ export const es: Dict = {
     gaugeAria: 'Medidor de GPA de 0.0 a 4.0. El anillo exterior es el GPA ponderado y el interior es el GPA no ponderado.',
     of40: 'de 4.0',
     gaugeEmpty: 'Agrega notas para ver tu GPA.',
+    owlEmpty: 'Agrega tus notas y te animaré.',
+    owlNeutral: 'Buen trabajo. Mantén el ritmo.',
+    owlGreat: '¡Excelente! Es un GPA muy sólido.',
+    owlKeep: 'Sigue adelante. Cada semestre es otra oportunidad para subirlo.',
   },
   good: {
     eyebrow: 'Interpretación',

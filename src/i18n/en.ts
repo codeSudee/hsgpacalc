@@ -84,6 +84,10 @@ export const en = {
     gaugeAria: 'GPA gauge from 0.0 to 4.0. Outer ring is weighted GPA, inner ring is unweighted GPA.',
     of40: 'of 4.0',
     gaugeEmpty: 'Add grades to see your GPA.',
+    owlEmpty: "Add your grades and I'll cheer you on.",
+    owlNeutral: 'Solid work. Keep it steady.',
+    owlGreat: "Great job! That's a strong GPA.",
+    owlKeep: 'Keep going. Every semester is a fresh chance to raise it.',
   },
   good: {
     eyebrow: 'Interpretation',

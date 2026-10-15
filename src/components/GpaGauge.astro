@@ -1,5 +1,6 @@
 ---
 // Circular gauge 0.0 - 4.0. Outer ring = weighted (clamped at 4.0), inner ring = unweighted.
+import Owl from './Owl.astro';
 import { useT } from '../i18n';
 const t = useT(Astro.currentLocale).calc;
 const R1 = 88, R2 = 68;
@@ -7,6 +8,10 @@ const C1 = +(2 * Math.PI * R1).toFixed(2);
 const C2 = +(2 * Math.PI * R2).toFixed(2);
 ---
 <div class="flex flex-col items-center gap-4">
+  <div class="flex w-full items-center gap-3 rounded-md bg-[var(--soft)] p-3" data-owl-wrap>
+    <Owl />
+    <p class="m-0 text-[13px] leading-5 text-[var(--ink)]" data-owl-text data-t-empty={t.owlEmpty} data-t-neutral={t.owlNeutral} data-t-great={t.owlGreat} data-t-keep={t.owlKeep}>{t.owlEmpty}</p>
+  </div>
   <div class="relative w-full max-w-[240px]">
     <svg viewBox="0 0 200 200" class="block w-full -rotate-90" role="img" aria-label={t.gaugeAria} data-gauge>
       <circle cx="100" cy="100" r={R1} fill="none" stroke="var(--track)" stroke-width="10" />

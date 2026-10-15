@@ -140,6 +140,19 @@ table.tbl { width: 100%; border-collapse: collapse; }
 
 .live { display: block; min-height: 20px; }
 
+.owl { width: 64px; height: 64px; flex: none; }
+.owl [data-p] { display: none; }
+.owl[data-pose="neutral"] [data-p~="neutral"],
+.owl[data-pose="great"] [data-p~="great"],
+.owl[data-pose="keep"] [data-p~="keep"] { display: inline; }
+
+.float-icon { position: absolute; z-index: -1; color: var(--ink); opacity: .08; pointer-events: none; animation: float-drift 11s ease-in-out infinite alternate; }
+@keyframes float-drift {
+  from { transform: translate3d(0, 0, 0) rotate(-4deg); }
+  to { transform: translate3d(8px, -16px, 0) rotate(5deg); }
+}
+@media (prefers-reduced-motion: reduce) { .float-icon { animation: none; } }
+
 .glow-pulse { animation: glow-pulse 1.4s ease-out 1; }
 @keyframes glow-pulse {
   0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ring-weighted) 55%, transparent); }
