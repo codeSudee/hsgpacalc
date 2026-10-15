@@ -1,0 +1,29 @@
+---
+// Template for one class row (cloned by the calculator script).
+const grades = ['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F'];
+---
+<template id="tpl-class">
+  <div class="class-row" data-class-row>
+    <label class="c-name"><span class="lbl">Class name</span><input class="field" data-f="name" name="class-name" type="text" placeholder="e.g. AP Biology…" autocomplete="off" maxlength="60" /></label>
+    <label><span class="lbl">Level</span>
+      <select class="select" data-f="level" name="class-level" autocomplete="off">
+        <option value="reg">Regular</option>
+        <option value="hon" data-lv="hon">Honors (+0.5)</option>
+        <option value="ap" data-lv="ap">AP / IB / Dual Enrollment (+1.0)</option>
+      </select>
+    </label>
+    <label><span class="lbl">Grade</span>
+      <select class="select" data-f="grade" name="class-grade" autocomplete="off">
+        <option value="">Select</option>
+        {grades.map((g) => <option value={g}>{g}</option>)}
+      </select>
+    </label>
+    <label><span class="lbl">Credits</span><input class="field num" data-f="credits" name="class-credits" autocomplete="off" spellcheck="false" type="number" inputmode="decimal" min="0" max="10" step="0.25" /></label>
+    <div class="flex items-center justify-between gap-2 col-span-full min-[900px]:col-span-1 min-[900px]:justify-end">
+      <label class="chk" title="Leave this class out of GPA (pass/fail, withdrawn)"><input type="checkbox" data-f="exclude" name="class-exclude" /> Exclude</label>
+      <button type="button" class="btn btn-icon btn-danger" data-action="remove-class" aria-label="Remove class">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M5 4.5l.5 8h5l.5-8"/></svg>
+      </button>
+    </div>
+  </div>
+</template>
