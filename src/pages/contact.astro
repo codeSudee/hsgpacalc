@@ -1,0 +1,28 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+const email = 'contact@hsgpacalc.com';
+---
+<PageLayout title="Contact HS GPA Calc | Questions & Feedback" description="Contact the HS GPA Calc team with questions, bug reports or feature ideas for our free high school GPA calculator." path="/contact/" heading="Contact Us">
+  <p>Found a bug, spotted a calculation that looks off, or have an idea for the calculator? We'd like to hear from you.</p>
+  <p>Email us at <a href={`mailto:${email}`}>{email}</a>, or use the form below to open a message in your email app.</p>
+  <form id="contact-form" class="card mt-8 grid gap-4 p-5">
+    <label class="grid gap-1.5 text-sm font-medium text-[var(--ink)]">Your name
+      <input name="name" autocomplete="name" required class="field" />
+    </label>
+    <label class="grid gap-1.5 text-sm font-medium text-[var(--ink)]">Subject
+      <input name="subject" autocomplete="off" required class="field" />
+    </label>
+    <label class="grid gap-1.5 text-sm font-medium text-[var(--ink)]">Message
+      <textarea name="message" rows="6" required class="field"></textarea>
+    </label>
+    <button type="submit" class="btn btn-primary justify-self-start">Open Email App</button>
+  </form>
+  <script define:vars={{ email }}>
+    document.getElementById('contact-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const f = new FormData(e.target);
+      const body = `${f.get('message')}\n\n— ${f.get('name')}`;
+      location.href = `mailto:${email}?subject=${encodeURIComponent(f.get('subject'))}&body=${encodeURIComponent(body)}`;
+    });
+  </script>
+</PageLayout>

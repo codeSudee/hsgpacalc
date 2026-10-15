@@ -1,0 +1,18 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+---
+<Layout title="Page Not Found | HS GPA Calc" description="The page you're looking for doesn't exist. Head back to the HS GPA Calc high school GPA calculator." path="/404/" noindex>
+  <SiteHeader />
+  <main id="main" class="wrap py-20 text-center md:py-32">
+    <p class="eyebrow m-0">Error 404</p>
+    <h1 class="mx-auto mt-4">Page not found</h1>
+    <p class="mx-auto mt-4 max-w-[46ch] text-base leading-6">The page you're looking for doesn't exist or has moved. Let's get you back to calculating.</p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a href="/" class="btn btn-primary no-underline">Go to the Calculator</a>
+      <a href="/contact/" class="btn no-underline">Contact Us</a>
+    </div>
+  </main>
+  <SiteFooter />
+</Layout>
