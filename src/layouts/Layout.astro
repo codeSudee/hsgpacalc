@@ -1,0 +1,41 @@
+---
+import '../styles/global.css';
+import Seo from '../components/Seo.astro';
+
+interface Props { title?: string; description?: string; path?: string; noindex?: boolean; }
+const { title, description, path, noindex } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="generator" content={Astro.generator} />
+    <Seo title={title} description={description} path={path} noindex={noindex} />
+    <slot name="head" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('hsgpa-theme');
+          if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          document.documentElement.dataset.theme = t;
+          document.querySelectorAll('meta[name=theme-color]').forEach(function (m) { m.setAttribute('content', t === 'dark' ? '#0a0a0a' : '#fafafa'); });
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#calculator">Skip to calculator</a>
+    <slot />
+    <script>
+      import Lenis from 'lenis';
+      const lenis = new Lenis({ respectReducedMotion: true, anchors: true });
+      function raf(t: number) { lenis.raf(t); requestAnimationFrame(raf); }
+      requestAnimationFrame(raf);
+    </script>
+  </body>
+</html>
