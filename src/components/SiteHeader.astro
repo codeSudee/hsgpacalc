@@ -1,0 +1,31 @@
+---
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const links = [
+  { href: '/about/', label: 'About' },
+  { href: '/contact/', label: 'Contact' },
+];
+---
+<header class="site border-b border-[var(--hairline)] bg-[var(--canvas)]">
+  <div class="wrap flex h-14 items-center justify-between">
+    <a href="/" class="flex items-center gap-2 font-semibold text-[var(--ink)] no-underline" style="letter-spacing:-0.02em">
+      <img src="/favicon-96x96.png" alt="" width="20" height="20" class="rounded" />
+      <span translate="no">HS GPA Calc</span>
+    </a>
+    <div class="flex items-center gap-1">
+      <nav aria-label="Main" class="hidden items-center gap-1 sm:flex">
+        {links.map((l) => <a class="nav-link" href={l.href} aria-current={path === l.href.replace(/\/$/, '') ? 'page' : undefined}>{l.label}</a>)}
+      </nav>
+      <button type="button" class="btn btn-icon no-print" id="theme-toggle" aria-label="Toggle dark mode">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M13.5 9.5A5.5 5.5 0 116.5 2.5a4.5 4.5 0 007 7z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+<script>
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    document.querySelectorAll('meta[name=theme-color]').forEach((m) => m.setAttribute('content', next === 'dark' ? '#0a0a0a' : '#fafafa'));
+    try { localStorage.setItem('hsgpa-theme', next); } catch {}
+  });
+</script>

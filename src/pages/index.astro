@@ -1,0 +1,45 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Calculator from '../components/Calculator.astro';
+import GoodGpaTable from '../components/GoodGpaTable.astro';
+import SeoContent from '../components/SeoContent.astro';
+import Faq from '../components/Faq.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+---
+<Layout path="/">
+  <SiteHeader />
+
+  <main id="main">
+    <section class="relative isolate overflow-hidden">
+      <div class="mesh" aria-hidden="true"></div>
+      <div class="wrap py-12 text-center md:py-20">
+        <p class="eyebrow m-0" data-hero>Free &middot; Private &middot; No sign-up</p>
+        <h1 class="mx-auto mt-4 max-w-[16ch]" data-hero>High School GPA Calculator</h1>
+        <p class="mx-auto mt-4 mb-0 max-w-[58ch] text-base leading-6" data-hero>Calculate your weighted and unweighted GPA by year and for your whole high school career. Supports Honors, AP, IB and Dual Enrollment. Your data never leaves your device.</p>
+        <nav aria-label="Site pages" class="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm" data-hero>
+          <a href="/about/">About Us</a>
+          <a href="/contact/">Contact Us</a>
+          <a href="/privacy-policy/">Privacy Policy</a>
+          <a href="/terms-and-conditions/">Terms &amp; Conditions</a>
+        </nav>
+      </div>
+    </section>
+
+    <div class="wrap pb-16 md:pb-24">
+      <Calculator />
+      <div class="mt-16 md:mt-24"><GoodGpaTable /></div>
+      <SeoContent />
+      <Faq />
+    </div>
+  </main>
+
+  <SiteFooter />
+
+  <script>
+    import { gsap } from 'gsap';
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      gsap.from('[data-hero]', { opacity: 0, y: 14, duration: 0.6, stagger: 0.1, ease: 'power3.out', clearProps: 'all' });
+    }
+  </script>
+</Layout>
