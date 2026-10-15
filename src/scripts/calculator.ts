@@ -98,12 +98,40 @@ function setRing(el: SVGCircleElement, v: number | null, animate: boolean) {
   else gsap.to(el, { attr: { 'stroke-dashoffset': off }, duration: 0.7, ease: 'power3.out', overwrite: true });
 }
 
+/** Counts a GPA readout from its currently shown value to the new one (~700ms ease-out). */
+const shown = new WeakMap<Element, number>();
+function setNum(el: Element, v: number | null, animate: boolean) {
+  const from = shown.get(el);
+  if (v === null || reduced || !animate || from === undefined || Math.abs(from - v) < 0.005) {
+    el.textContent = fmt(v);
+    if (v === null) shown.delete(el); else shown.set(el, v);
+    return;
+  }
+  const o = { n: from };
+  gsap.to(o, {
+    n: v, duration: 0.7, ease: 'power3.out', overwrite: true,
+    onUpdate: () => { el.textContent = o.n.toFixed(2); shown.set(el, o.n); },
+    onComplete: () => { el.textContent = fmt(v); shown.set(el, v); },
+  });
+}
+let wasGreat = false;
+/** One-shot glow on the weighted readout when it crosses up to 4.0. */
+function celebrate(w: number | null, animate: boolean) {
+  const great = w !== null && w >= 4 - 1e-9;
+  if (great && !wasGreat && animate && !reduced) {
+    const box = $('[data-gpa-w]').parentElement!;
+    box.classList.remove('glow-pulse'); void box.offsetWidth; box.classList.add('glow-pulse');
+  }
+  wasGreat = great;
+}
+
 function refresh(animate = true, persist = true) {
   const tot = all();
   const u = gpa(tot.qu, tot.cr), w = gpa(tot.qw, tot.cr);
-  $('[data-gpa-u]').textContent = fmt(u);
-  $('[data-gpa-u2]').textContent = fmt(u);
-  $('[data-gpa-w]').textContent = fmt(w);
+  setNum($('[data-gpa-u]'), u, animate);
+  setNum($('[data-gpa-u2]'), u, animate);
+  setNum($('[data-gpa-w]'), w, animate);
+  celebrate(w, animate);
   const pr = prior(state);
   let meta = tot.n || pr
     ? fill(T.metaCounted, { n: tot.n, cls: tot.n === 1 ? T.clsOne : T.clsMany, cr: +tot.cr.toFixed(2) }) + (pr ? fill(T.metaPrior, { pr: +pr.cr.toFixed(2) }) : '')

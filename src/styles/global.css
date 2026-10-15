@@ -140,6 +140,12 @@ table.tbl { width: 100%; border-collapse: collapse; }
 
 .live { display: block; min-height: 20px; }
 
+.glow-pulse { animation: glow-pulse 1.4s ease-out 1; }
+@keyframes glow-pulse {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ring-weighted) 55%, transparent); }
+  100% { box-shadow: 0 0 0 18px transparent; }
+}
+
 @media print {
   .no-print, .mesh, header.site, footer.site { display: none !important; }
   body { background: #fff; color: #000; }

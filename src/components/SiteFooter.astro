@@ -9,7 +9,7 @@ const links = [
   { href: localePath(lang, '/terms-and-conditions/'), label: t.footer.terms },
 ];
 ---
-<footer class="site border-t border-[var(--hairline)]">
+<footer class="site border-t border-[var(--hairline)]" data-reveal>
   <div class="wrap flex flex-col gap-4 py-10 text-[13px]">
     <nav aria-label={t.footer.nav} class="flex flex-wrap gap-x-5 gap-y-2">
       {links.map((l) => <a href={l.href}>{l.label}</a>)}
