@@ -1,0 +1,18 @@
+# HS GPA Calc
+
+> Free, private high school GPA calculator. Calculates weighted and unweighted GPA on 4.0, plus/minus and 4.33 scales with AP, Honors, IB and Dual Enrollment classes, per year and cumulative. Runs entirely in the browser; no sign-up. Available in English and Spanish.
+
+## Tool
+- [High School GPA Calculator](https://hsgpacalc.com/): the calculator, plus FAQ and what counts as a good GPA
+- [Calculadora de GPA (Español)](https://hsgpacalc.com/es/): Spanish version
+
+## Guides
+- [How to Calculate Your High School GPA](https://hsgpacalc.com/how-to-calculate-gpa/): formula, credits, plus/minus, worked example
+- [Weighted vs Unweighted GPA](https://hsgpacalc.com/weighted-vs-unweighted-gpa/): differences and which colleges use
+- [GPA Scale Chart](https://hsgpacalc.com/gpa-scale-chart/): letter grade and percent to 4.0 / 4.33 points
+- [How Much Do AP and Honors Add to GPA?](https://hsgpacalc.com/ap-honors-gpa-weights/): common weighting rules
+
+## About
+- [About](https://hsgpacalc.com/about/)
+- [Contact](https://hsgpacalc.com/contact/)
+- [Privacy Policy](https://hsgpacalc.com/privacy-policy/)

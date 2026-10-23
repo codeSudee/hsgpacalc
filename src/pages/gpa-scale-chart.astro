@@ -1,0 +1,41 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import GuideCta from '../components/GuideCta.astro';
+const rows = [
+  ['A+', '97–100', '4.0', '4.33'],
+  ['A', '93–96', '4.0', '4.0'],
+  ['A-', '90–92', '3.7', '3.7'],
+  ['B+', '87–89', '3.3', '3.3'],
+  ['B', '83–86', '3.0', '3.0'],
+  ['B-', '80–82', '2.7', '2.7'],
+  ['C+', '77–79', '2.3', '2.3'],
+  ['C', '73–76', '2.0', '2.0'],
+  ['C-', '70–72', '1.7', '1.7'],
+  ['D+', '67–69', '1.3', '1.3'],
+  ['D', '65–66', '1.0', '1.0'],
+  ['F', 'Below 65', '0.0', '0.0'],
+];
+---
+<PageLayout type="article" enOnly published="2026-10-23" title="GPA Scale Chart: Letter Grade, Percent & 4.0 Points" description="GPA scale chart converting letter grades and percentages to 4.0 and 4.33 grade points, including plus/minus grades. Find your GPA conversion in seconds." path="/gpa-scale-chart/" heading="GPA Scale Chart: Letter Grade to GPA">
+  <p>Use this chart to convert a letter grade or percentage to grade points. Percent ranges vary by school; the ranges below are a widely used standard.</p>
+
+  <div class="overflow-x-auto">
+    <table class="tbl">
+      <caption class="sr-only">Letter grade, percentage and GPA points</caption>
+      <thead><tr><th scope="col">Letter</th><th scope="col">Percent</th><th scope="col">4.0 scale</th><th scope="col">4.33 scale</th></tr></thead>
+      <tbody>{rows.map((r) => <tr><td>{r[0]}</td><td class="num">{r[1]}</td><td class="num">{r[2]}</td><td class="num">{r[3]}</td></tr>)}</tbody>
+    </table>
+  </div>
+
+  <h2>Which scale does my school use?</h2>
+  <ul>
+    <li><strong>Plus/minus 4.0:</strong> the table's 4.0 column. Most common.</li>
+    <li><strong>Letters only:</strong> A = 4.0, B = 3.0, C = 2.0, D = 1.0, F = 0, with no plus or minus.</li>
+    <li><strong>4.33:</strong> an A+ is worth 4.33. Less common.</li>
+  </ul>
+  <p>Our <a href="/#calculator">GPA calculator</a> supports all three scales.</p>
+
+  <h2>From grade points to GPA</h2>
+  <p>Once you have grade points for each class, multiply by credits, add, and divide by total credits. Walk through it in <a href="/how-to-calculate-gpa/">how to calculate your GPA</a>. For Honors and AP bonus points, see <a href="/ap-honors-gpa-weights/">AP and Honors weights</a>.</p>
+  <GuideCta current="/gpa-scale-chart/" />
+</PageLayout>

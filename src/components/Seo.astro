@@ -8,6 +8,13 @@ interface Props {
   path?: string;
   image?: string;
   noindex?: boolean;
+  /** 'app' = home calculator, 'page' = generic page, 'article' = guide */
+  type?: 'app' | 'page' | 'article';
+  /** Page has no translation: omit hreflang alternates. */
+  enOnly?: boolean;
+  heading?: string;
+  published?: string;
+  modified?: string;
 }
 const lang = getLang(Astro.currentLocale);
 const t = useT(lang);
@@ -17,54 +24,95 @@ const {
   path = '/',
   image = OG_IMAGE,
   noindex = false,
+  type = 'app',
+  enOnly = false,
+  heading,
+  published,
+  modified,
 } = Astro.props;
 
 const canonical = new URL(localePath(lang, path), SITE_URL).href;
-const alternates = noindex
+const alternates = noindex || enOnly
   ? []
   : [
       ...LANGS.map((l) => ({ hreflang: HREFLANG[l], href: new URL(localePath(l, path), SITE_URL).href })),
       { hreflang: 'x-default', href: new URL(path, SITE_URL).href },
     ];
-const otherLocales = LANGS.filter((l) => l !== lang).map((l) => useT(l).ogLocale);
+const otherLocales = enOnly ? [] : LANGS.filter((l) => l !== lang).map((l) => useT(l).ogLocale);
 const imageUrl = new URL(image, SITE_URL).href;
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'WebApplication',
-      '@id': `${SITE_URL}/#app`,
-      name: t.seo.appName,
-      alternateName: SITE_NAME,
-      url: canonical,
-      description,
-      applicationCategory: 'EducationalApplication',
-      operatingSystem: 'Any',
-      browserRequirements: 'Requires JavaScript',
-      inLanguage: HREFLANG[lang],
-      isAccessibleForFree: true,
-      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-      publisher: { '@id': `${SITE_URL}/#org` },
-    },
-    {
-      '@type': 'WebSite',
-      '@id': `${SITE_URL}/#website`,
-      url: SITE_URL,
-      name: SITE_NAME,
-      description: t.seo.description,
-      inLanguage: HREFLANG[lang],
-      publisher: { '@id': `${SITE_URL}/#org` },
-    },
-    {
-      '@type': 'Organization',
-      '@id': `${SITE_URL}/#org`,
-      name: SITE_NAME,
-      url: SITE_URL,
-      logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png`, width: 512, height: 512 },
-    },
-  ],
+const org = {
+  '@type': 'Organization',
+  '@id': `${SITE_URL}/#org`,
+  name: SITE_NAME,
+  url: SITE_URL,
+  logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png`, width: 512, height: 512 },
 };
+const website = {
+  '@type': 'WebSite',
+  '@id': `${SITE_URL}/#website`,
+  url: SITE_URL,
+  name: SITE_NAME,
+  description: t.seo.description,
+  inLanguage: HREFLANG[lang],
+  publisher: { '@id': `${SITE_URL}/#org` },
+};
+const homeUrl = new URL(localePath(lang, '/'), SITE_URL).href;
+const crumbs = [
+  { name: SITE_NAME, item: homeUrl },
+  ...(type === 'app' ? [] : [{ name: heading ?? title, item: canonical }]),
+];
+const breadcrumb = {
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: c.item })),
+};
+const graph: object[] = [website, org];
+if (type === 'app') {
+  graph.unshift({
+    '@type': 'WebApplication',
+    '@id': `${SITE_URL}/#app`,
+    name: t.seo.appName,
+    alternateName: SITE_NAME,
+    url: canonical,
+    description,
+    applicationCategory: 'EducationalApplication',
+    operatingSystem: 'Any',
+    browserRequirements: 'Requires JavaScript',
+    inLanguage: HREFLANG[lang],
+    isAccessibleForFree: true,
+    image: imageUrl,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    publisher: { '@id': `${SITE_URL}/#org` },
+  });
+} else {
+  graph.unshift(
+    type === 'article'
+      ? {
+          '@type': 'Article',
+          '@id': `${canonical}#article`,
+          headline: heading ?? title,
+          description,
+          image: imageUrl,
+          mainEntityOfPage: canonical,
+          inLanguage: HREFLANG[lang],
+          datePublished: published,
+          dateModified: modified ?? published,
+          author: { '@id': `${SITE_URL}/#org` },
+          publisher: { '@id': `${SITE_URL}/#org` },
+        }
+      : {
+          '@type': 'WebPage',
+          '@id': `${canonical}#webpage`,
+          url: canonical,
+          name: title,
+          description,
+          inLanguage: HREFLANG[lang],
+          isPartOf: { '@id': `${SITE_URL}/#website` },
+        },
+  );
+  graph.push(breadcrumb);
+}
+const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
 ---
 
 <title>{title}</title>
@@ -80,7 +128,7 @@ const jsonLd = {
 <link rel="manifest" href="/site.webmanifest" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-<meta property="og:type" content="website" />
+<meta property="og:type" content={type === 'article' ? 'article' : 'website'} />
 <meta property="og:site_name" content={SITE_NAME} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />

@@ -1,0 +1,15 @@
+---
+import { guides } from '../data/guides';
+---
+<section aria-labelledby="guides-h" class="mt-16 md:mt-24" data-scroll-reveal>
+  <p class="eyebrow m-0">Guides</p>
+  <h2 id="guides-h" class="mt-2">GPA guides for students and parents</h2>
+  <div class="mt-5 grid gap-4 sm:grid-cols-2">
+    {guides.map((g) => (
+      <a href={g.path} class="card block p-5 no-underline">
+        <strong class="block text-[var(--ink)]">{g.title}</strong>
+        <span class="mt-1 block text-sm">{g.blurb}</span>
+      </a>
+    ))}
+  </div>
+</section>

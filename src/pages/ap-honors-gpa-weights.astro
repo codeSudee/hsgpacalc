@@ -1,0 +1,36 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import GuideCta from '../components/GuideCta.astro';
+const rows = [
+  ['Regular / College Prep', '+0.0', '4.0', '3.0', '2.0'],
+  ['Honors / Accelerated', '+0.5', '4.5', '3.5', '2.5'],
+  ['AP, IB, Dual Enrollment', '+1.0', '5.0', '4.0', '3.0'],
+];
+---
+<PageLayout type="article" enOnly published="2026-10-23" title="How Much Do AP and Honors Classes Add to GPA?" description="See how many GPA points AP, Honors, IB and Dual Enrollment classes add on a weighted scale, with a weight table, examples and how to match your school's policy." path="/ap-honors-gpa-weights/" heading="How Much Do AP and Honors Classes Add to Your GPA?">
+  <p>Weighted GPA rewards advanced coursework by adding bonus points. The most common system is +0.5 for Honors and +1.0 for AP, IB and Dual Enrollment. Your school may differ, so always confirm in your course handbook.</p>
+
+  <h2>Common weighting table</h2>
+  <div class="overflow-x-auto">
+    <table class="tbl">
+      <caption class="sr-only">Typical weighted GPA points by class level</caption>
+      <thead><tr><th scope="col">Class level</th><th scope="col">Bonus</th><th scope="col">A</th><th scope="col">B</th><th scope="col">C</th></tr></thead>
+      <tbody>{rows.map((r) => <tr><td>{r[0]}</td><td class="num">{r[1]}</td><td class="num">{r[2]}</td><td class="num">{r[3]}</td><td class="num">{r[4]}</td></tr>)}</tbody>
+    </table>
+  </div>
+
+  <h2>Variations you may see</h2>
+  <ul>
+    <li><strong>+0.25 / +0.75:</strong> some districts use smaller bonuses.</li>
+    <li><strong>Bonus only for passing grades:</strong> some schools add weight only to A, B and C grades.</li>
+    <li><strong>Different scales:</strong> a few schools use a 6.0 or 100-point weighted scale.</li>
+    <li><strong>Mixed rules:</strong> IB Standard Level, AP seminar or dual-credit classes may be weighted differently.</li>
+  </ul>
+
+  <h2>Is it worth taking harder classes?</h2>
+  <p>A B in an AP class (4.0 weighted) equals an A in a Regular class in weighted GPA, and colleges value the rigor. But colleges also want strong grades, so choose a challenge you can handle alongside activities and sleep.</p>
+
+  <h2>Match your school</h2>
+  <p>In the <a href="/#calculator">GPA calculator</a>, pick each class level and edit the custom bonus to match your handbook. Then see the effect on your <a href="/weighted-vs-unweighted-gpa/">weighted and unweighted GPA</a>.</p>
+  <GuideCta current="/ap-honors-gpa-weights/" />
+</PageLayout>

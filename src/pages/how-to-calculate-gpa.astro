@@ -1,0 +1,45 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import GuideCta from '../components/GuideCta.astro';
+---
+<PageLayout type="article" enOnly published="2026-10-23" title="How to Calculate High School GPA (Step-by-Step Formula)" description="Learn how to calculate your high school GPA by hand: convert grades to points, weight by credits, and divide. Includes plus/minus grades and worked examples." path="/how-to-calculate-gpa/" heading="How to Calculate Your High School GPA">
+  <p>Your grade point average (GPA) is the average of the grade points you earned across all your classes. Here is the exact method most U.S. high schools use, with examples you can follow along with.</p>
+
+  <h2>The formula</h2>
+  <p><strong>GPA = total grade points ÷ total credits</strong>, where each class contributes (grade points × credits).</p>
+
+  <h2>Step 1: Convert each letter grade to points</h2>
+  <p>On the standard unweighted 4.0 scale: A = 4.0, B = 3.0, C = 2.0, D = 1.0, F = 0. Schools that use plus/minus grades use A- = 3.7, B+ = 3.3, B- = 2.7, C+ = 2.3, C- = 1.7 and so on. See the full <a href="/gpa-scale-chart/">GPA scale chart</a>.</p>
+
+  <h2>Step 2: Multiply by credits</h2>
+  <p>A full-year class is usually 1.0 credit and a semester class 0.5. Multiply the grade points by the credits for each class.</p>
+
+  <h2>Step 3: Add and divide</h2>
+  <p>Add every class's result, then divide by the total credits you attempted.</p>
+
+  <h2>Worked example</h2>
+  <ul>
+    <li>English: A (4.0) × 1.0 credit = 4.0</li>
+    <li>Algebra II: B+ (3.3) × 1.0 credit = 3.3</li>
+    <li>Biology: B (3.0) × 1.0 credit = 3.0</li>
+    <li>Spanish: A- (3.7) × 1.0 credit = 3.7</li>
+    <li>PE: A (4.0) × 0.5 credit = 2.0</li>
+  </ul>
+  <p>Total points: 16.0. Total credits: 4.5. GPA = 16.0 ÷ 4.5 = <strong>3.56</strong>.</p>
+
+  <h2>Cumulative GPA across years</h2>
+  <p>Your cumulative GPA is not the average of your yearly GPAs unless every year had the same number of credits. Add up all points and all credits from 9th grade on, then divide once. Our calculator does this for you and also shows each year separately.</p>
+
+  <h2>What about weighted GPA?</h2>
+  <p>For Honors, AP, IB and Dual Enrollment classes, schools add bonus points before multiplying by credits. An A in an AP class becomes 5.0 instead of 4.0. Read <a href="/weighted-vs-unweighted-gpa/">weighted vs unweighted GPA</a> and <a href="/ap-honors-gpa-weights/">how much AP and Honors add</a>.</p>
+
+  <h2>Common mistakes</h2>
+  <ul>
+    <li>Averaging grades instead of weighting by credits.</li>
+    <li>Counting Pass/Fail classes that your school does not include in GPA.</li>
+    <li>Using a different plus/minus scale than your school's.</li>
+    <li>Forgetting that repeated courses may be replaced or averaged depending on policy.</li>
+  </ul>
+  <p>Results are estimates. Your official transcript is the number colleges see.</p>
+  <GuideCta current="/how-to-calculate-gpa/" />
+</PageLayout>

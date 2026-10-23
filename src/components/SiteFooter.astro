@@ -1,4 +1,5 @@
 ---
+import { guides } from '../data/guides';
 import { useT, getLang, localePath } from '../i18n';
 const lang = getLang(Astro.currentLocale);
 const t = useT(lang);
@@ -14,6 +15,11 @@ const links = [
     <nav aria-label={t.footer.nav} class="flex flex-wrap gap-x-5 gap-y-2">
       {links.map((l) => <a href={l.href}>{l.label}</a>)}
     </nav>
+    {lang === 'en' && (
+      <nav aria-label="Guides" class="flex flex-wrap gap-x-5 gap-y-2">
+        {guides.map((g) => <a href={g.path}>{g.title}</a>)}
+      </nav>
+    )}
     <p class="m-0">&copy; {new Date().getFullYear()} <span translate="no">HS GPA Calc</span>. {t.footer.note}</p>
   </div>
 </footer>

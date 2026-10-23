@@ -5,6 +5,7 @@ import GoodGpaTable from './GoodGpaTable.astro';
 import SeoContent from './SeoContent.astro';
 import SeoContentEs from './SeoContent.es.astro';
 import Faq from './Faq.astro';
+import GuideLinks from './GuideLinks.astro';
 import SiteHeader from './SiteHeader.astro';
 import SiteFooter from './SiteFooter.astro';
 import { useT, getLang, localePath } from '../i18n';
@@ -43,6 +44,7 @@ const nav = [
       <Calculator />
       <div class="mt-16 md:mt-24"><GoodGpaTable /></div>
       {lang === 'es' ? <SeoContentEs /> : <SeoContent />}
+      {lang === 'en' && <GuideLinks />}
       <Faq />
     </div>
   </main>
