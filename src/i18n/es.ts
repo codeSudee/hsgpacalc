@@ -13,7 +13,7 @@ export const es: Dict = {
     imageAlt: 'HS GPA Calc: calculadora de GPA de high school gratis, ponderado y no ponderado',
   },
   skip: 'Ir a la calculadora',
-  header: { about: 'Acerca de', contact: 'Contacto', toggleTheme: 'Cambiar modo oscuro', mainNav: 'Principal', switchTo: 'English', switchLabel: 'View in English' },
+  header: { about: 'Acerca de', contact: 'Contacto', toggleTheme: 'Cambiar modo oscuro', mainNav: 'Principal', language: 'Idioma' },
   footer: {
     nav: 'Pie de página',
     about: 'Acerca de nosotros',

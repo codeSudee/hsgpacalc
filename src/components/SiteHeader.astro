@@ -2,11 +2,17 @@
 import { useT, getLang, localePath, stripLocale } from '../i18n';
 const lang = getLang(Astro.currentLocale);
 const t = useT(lang);
-const other = lang === 'en' ? 'es' : 'en';
 const base = stripLocale(Astro.url.pathname);
 const path = base.replace(/\/$/, '') || '/';
-// German has no translated counterparts, so its switcher goes to the English home page.
-const switchHref = lang === 'de' ? '/' : localePath(other, base);
+// Language menu: the same page in each language when it exists, else that language's home.
+// German only has the Abi-Rechner, so Deutsch always points there.
+const esRoutes = new Set(Object.keys(import.meta.glob('../pages/es/**/*.astro')).map((f) =>
+  f.replace('../pages/es', '').replace(/(index)?\.astro$/, '').replace(/\/?$/, '/')));
+const langs = [
+  { code: 'en', name: 'English', href: lang === 'de' ? '/' : base },
+  { code: 'es', name: 'Español', href: localePath('es', lang !== 'de' && esRoutes.has(base) ? base : '/') },
+  { code: 'de', name: 'Deutsch', href: '/de/abi-rechner/' },
+];
 const links = [
   { href: localePath(lang, '/about/'), base: '/about', label: t.header.about },
   { href: localePath(lang, '/contact/'), base: '/contact', label: t.header.contact },
@@ -22,7 +28,18 @@ const links = [
       <nav aria-label={t.header.mainNav} class="hidden items-center gap-1 sm:flex">
         {links.map((l) => <a class="nav-link" href={l.href} aria-current={path === l.base ? 'page' : undefined}>{l.label}</a>)}
       </nav>
-      <a class="nav-link no-print" href={switchHref} hreflang={other} lang={other} aria-label={t.header.switchLabel}>{t.header.switchTo}</a>
+      <details class="lang-menu no-print" id="lang-menu">
+        <summary class="nav-link" aria-label={`${t.header.language}: ${t.langName}`}>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M1.5 8h13M8 1.5c2 2 2.8 4.2 2.8 6.5S10 12.5 8 14.5C6 12.5 5.2 10.3 5.2 8S6 3.5 8 1.5Z"/></svg>
+          <span>{t.langName}</span>
+          <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+        </summary>
+        <ul class="card" role="list">
+          {langs.map((l) => (
+            <li><a href={l.href} hreflang={l.code} lang={l.code} aria-current={l.code === lang ? 'true' : undefined}>{l.name}{l.code === 'de' && <span class="text-[var(--mute)]"> · Abi-Rechner</span>}</a></li>
+          ))}
+        </ul>
+      </details>
       <button type="button" class="btn btn-icon no-print" id="theme-toggle" aria-label={t.header.toggleTheme}>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M13.5 9.5A5.5 5.5 0 116.5 2.5a4.5 4.5 0 007 7z"/></svg>
       </button>
@@ -36,4 +53,8 @@ const links = [
     document.querySelectorAll('meta[name=theme-color]').forEach((m) => m.setAttribute('content', next === 'dark' ? '#0a0a0a' : '#fafafa'));
     try { localStorage.setItem('hsgpa-theme', next); } catch {}
   });
+  // Close the language menu on outside click or Escape.
+  const menu = document.getElementById('lang-menu') as HTMLDetailsElement | null;
+  document.addEventListener('click', (e) => { if (menu?.open && !menu.contains(e.target as Node)) menu.open = false; });
+  menu?.addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu.open) { menu.open = false; menu.querySelector('summary')?.focus(); } });
 </script>

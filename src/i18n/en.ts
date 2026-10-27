@@ -12,7 +12,7 @@ export const en = {
     imageAlt: 'HS GPA Calc: free high school GPA calculator for weighted and unweighted GPA',
   },
   skip: 'Skip to calculator',
-  header: { about: 'About', contact: 'Contact', toggleTheme: 'Toggle dark mode', mainNav: 'Main', switchTo: 'Español', switchLabel: 'Ver en español' },
+  header: { about: 'About', contact: 'Contact', toggleTheme: 'Toggle dark mode', mainNav: 'Main', language: 'Language' },
   footer: {
     nav: 'Footer',
     about: 'About Us',

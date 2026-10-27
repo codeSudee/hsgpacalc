@@ -201,3 +201,11 @@ table.tbl { width: 100%; border-collapse: collapse; }
 .prose-page ul { margin: 12px 0 0; padding-left: 20px; }
 .nav-link { color: var(--body); text-decoration: none; font-size: 14px; padding: 6px 8px; border-radius: 6px; }
 .nav-link:hover, .nav-link[aria-current="page"] { color: var(--ink); background: var(--soft); }
+.lang-menu { position: relative; }
+.lang-menu summary { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; list-style: none; min-height: 32px; }
+.lang-menu summary::-webkit-details-marker { display: none; }
+.lang-menu[open] summary { color: var(--ink); background: var(--soft); }
+.lang-menu ul { position: absolute; right: 0; top: calc(100% + 6px); z-index: 40; min-width: 200px; margin: 0; padding: 4px; list-style: none; box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+.lang-menu a { display: block; padding: 8px 10px; border-radius: 6px; color: var(--body); text-decoration: none; font-size: 14px; }
+.lang-menu a:hover { background: var(--soft); color: var(--ink); }
+.lang-menu a[aria-current] { color: var(--ink); font-weight: 500; }

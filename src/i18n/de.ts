@@ -14,7 +14,7 @@ export const de: Dict = {
     imageAlt: 'HS GPA Calc: kostenloser Abi-Rechner für den Abiturschnitt',
   },
   skip: 'Zum Rechner springen',
-  header: { about: 'Über uns', contact: 'Kontakt', toggleTheme: 'Dunkelmodus umschalten', mainNav: 'Hauptmenü', switchTo: 'English', switchLabel: 'Zur englischen Website' },
+  header: { about: 'Über uns', contact: 'Kontakt', toggleTheme: 'Dunkelmodus umschalten', mainNav: 'Hauptmenü', language: 'Sprache' },
   footer: {
     nav: 'Fußzeile',
     about: 'Über uns',
