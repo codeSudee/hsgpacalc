@@ -1,17 +1,19 @@
 ---
-import { useT, getLang, localePath, stripLocale } from '../i18n';
+import { useT, getLang, localePath, stripLocale, DE_PAIRS } from '../i18n';
 const lang = getLang(Astro.currentLocale);
 const t = useT(lang);
 const base = stripLocale(Astro.url.pathname);
 const path = base.replace(/\/$/, '') || '/';
 // Language menu: the same page in each language when it exists, else that language's home.
-// German only has the Abi-Rechner, so Deutsch always points there.
+// German only has a few standalone tools (DE_PAIRS); otherwise Deutsch points to the Abi-Rechner.
 const esRoutes = new Set(Object.keys(import.meta.glob('../pages/es/**/*.astro')).map((f) =>
   f.replace('../pages/es', '').replace(/(index)?\.astro$/, '').replace(/\/?$/, '/')));
+const enFor = Object.fromEntries(Object.entries(DE_PAIRS).map(([en, de]) => [de, en]));
+const deHref = lang === 'de' ? base : DE_PAIRS[base] ?? '/de/abi-rechner/';
 const langs = [
-  { code: 'en', name: 'English', href: lang === 'de' ? '/' : base },
+  { code: 'en', name: 'English', href: lang === 'de' ? enFor[base] ?? '/' : base },
   { code: 'es', name: 'Español', href: localePath('es', lang !== 'de' && esRoutes.has(base) ? base : '/') },
-  { code: 'de', name: 'Deutsch', href: '/de/abi-rechner/' },
+  { code: 'de', name: 'Deutsch', href: deHref },
 ];
 const links = [
   { href: localePath(lang, '/about/'), base: '/about', label: t.header.about },
@@ -36,7 +38,7 @@ const links = [
         </summary>
         <ul class="card" role="list">
           {langs.map((l) => (
-            <li><a href={l.href} hreflang={l.code} lang={l.code} aria-current={l.code === lang ? 'true' : undefined}>{l.name}{l.code === 'de' && <span class="text-[var(--mute)]"> · Abi-Rechner</span>}</a></li>
+            <li><a href={l.href} hreflang={l.code} lang={l.code} aria-current={l.code === lang ? 'true' : undefined}>{l.name}{l.code === 'de' && l.href === '/de/abi-rechner/' && <span class="text-[var(--mute)]"> · Abi-Rechner</span>}</a></li>
           ))}
         </ul>
       </details>

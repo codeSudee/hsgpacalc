@@ -65,3 +65,6 @@ assert.equal(C.usToGerman(4), 1); assert.equal(C.usToGerman(4.8), 1); assert.equ
 assert.equal(C.usToGerman(3), 2.5); assert.equal(C.usToGerman(2), 4); assert.equal(C.usToGerman(0), 6);
 assert.equal(C.germanToUs(1), 4); assert.equal(C.germanToUs(2.5), 3); assert.equal(C.germanToUs(4), 2); assert.equal(C.germanToUs(1.8), 3.47);
 console.log('conversion checks passed');
+// round trip through the exact GPA (what the converter carries across a swap)
+for (let g = 1; g <= 4.0001; g += 0.1) { const r = Math.round(g * 10) / 10; assert.equal(C.usToGerman(C.germanToUsExact(r)), r, `round trip ${r}`); }
+console.log('round-trip checks passed');

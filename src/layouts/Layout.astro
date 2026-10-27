@@ -3,8 +3,8 @@ import '../styles/global.css';
 import Seo from '../components/Seo.astro';
 import { useT, getLang } from '../i18n';
 
-interface Props { title?: string; description?: string; path?: string; noindex?: boolean; type?: 'app' | 'page' | 'article'; enOnly?: boolean; heading?: string; published?: string; modified?: string; }
-const { title, description, path, noindex, type, enOnly, heading, published, modified } = Astro.props;
+interface Props { title?: string; description?: string; path?: string; noindex?: boolean; type?: 'app' | 'page' | 'article'; enOnly?: boolean; alternates?: { hreflang: string; href: string }[]; heading?: string; published?: string; modified?: string; }
+const { title, description, path, noindex, type, enOnly, alternates, heading, published, modified } = Astro.props;
 const lang = getLang(Astro.currentLocale);
 const t = useT(lang);
 ---
@@ -15,7 +15,7 @@ const t = useT(lang);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
     <meta name="generator" content={Astro.generator} />
-    <Seo title={title} description={description} path={path} noindex={noindex} type={type} enOnly={enOnly} heading={heading} published={published} modified={modified} />
+    <Seo title={title} description={description} path={path} noindex={noindex} type={type} enOnly={enOnly} alternates={alternates} heading={heading} published={published} modified={modified} />
     <slot name="head" />
     <script is:inline async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6778789012514648" crossorigin="anonymous"></script>
     <!-- Google tag (gtag.js) -->

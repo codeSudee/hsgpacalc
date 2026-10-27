@@ -1,0 +1,117 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import GradeConverter from '../components/GradeConverter.astro';
+import { faqSchema, type Faq } from '../data/faqs';
+import { germanToUs } from '../scripts/convert';
+
+const title = 'German Grade to GPA Converter (and GPA to German Grade)';
+const description = 'Convert a German grade (Note 1.0–4.0, Abitur) to a US GPA on the 4.0 scale, or a US GPA to a German grade, with the modified Bavarian formula. Free, instant, with a full chart.';
+const path = '/german-grade-to-gpa/';
+const alternates = [
+  { hreflang: 'en-US', href: path },
+  { hreflang: 'de-DE', href: '/de/note-in-gpa-umrechnen/' },
+  { hreflang: 'x-default', href: path },
+];
+const rows = Array.from({ length: 31 }, (_, i) => Math.round((1 + i / 10) * 10) / 10).map((g) => ({ g, us: germanToUs(g) }));
+const half = Math.ceil(rows.length / 2);
+const de = (n: number) => n.toFixed(1).replace('.', ',');
+const examples = ['1,0', '1,5', '2,0', '2,5', '3,0'];
+
+const faqs: Faq[] = [
+  {
+    question: 'How do I convert a German grade to a US GPA?',
+    answer: 'Use the modified Bavarian formula in reverse: GPA = 4.0 − (German grade − 1) × 2/3. A German 1.0 becomes a 4.0, a 2.5 becomes a 3.0 and a 4.0 (the lowest pass) becomes a 2.0. The converter on this page does the math for you.',
+  },
+  {
+    question: 'How do I convert a US GPA to a German grade?',
+    answer: 'German grade = 1 + 3 × (4.0 − GPA) / (4.0 − 2.0). A 3.5 GPA gives 1.75, which is cut to 1.7. German universities often use this formula, with your school\'s best and lowest passing grade, to estimate a foreign grade on the German scale.',
+  },
+  {
+    question: 'Is this an official conversion?',
+    answer: 'No. There is no official US to German grade conversion. US colleges often ask credential evaluators such as WES to review German transcripts, and German universities apply their own rules. Use the result as an estimate.',
+  },
+  {
+    question: 'Why is 1.0 the best German grade?',
+    answer: 'German schools grade from 1 (sehr gut, very good) to 6 (ungenügend, failing), so lower is better. 4.0 (ausreichend) is the lowest passing grade, which is why the formula maps it to a 2.0 GPA.',
+  },
+];
+---
+<Layout title={title} description={description} path={path} type="app" alternates={alternates}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema(faqs))} />
+  <SiteHeader />
+  <main id="main">
+    <section class="relative isolate overflow-hidden">
+      <div class="mesh" aria-hidden="true"></div>
+      <div class="wrap py-12 text-center md:py-16">
+        <p class="eyebrow m-0">Free · Instant · No sign-up</p>
+        <h1 class="mx-auto mt-4 max-w-[18ch]">German Grade to GPA Converter</h1>
+        <p class="mx-auto mt-4 mb-0 max-w-[58ch] text-base leading-6">Type a German grade to see the US GPA, or press the swap button to turn a US GPA into a German grade. Based on the modified Bavarian formula used by German universities.</p>
+      </div>
+    </section>
+
+    <div class="wrap pb-16">
+      <GradeConverter t={{
+        de: 'German grade', us: 'US GPA', swap: 'Swap direction', input: 'Enter grade', result: 'Result',
+        phDe: 'e.g. 2,3', phUs: 'e.g. 3.5',
+        hintDe: 'German grades run from 1,0 (best) to 6,0. Use a comma or a dot.',
+        hintUs: 'GPA on the 4.0 scale. Weighted GPAs above 4.0 count as 1,0.',
+        invalidDe: 'Enter a German grade between 1,0 and 6,0.',
+        invalidUs: 'Enter a GPA between 0 and 5.0.',
+        failDe: 'Grades above 4,0 are failing in Germany.',
+        failUs: 'Below a 2.0 GPA, the result is outside the German passing range (worse than 4,0).',
+        topUs: 'Weighted GPAs above 4.0 map to the best German grade, 1,0.',
+        empty: 'Your result appears here as you type.',
+      }} />
+      <p class="no-print mx-auto mt-4 flex max-w-[560px] flex-wrap items-center justify-center gap-2 text-[13px]">
+        <span class="text-[var(--mute)]">Try:</span>
+        {examples.map((e) => <button type="button" class="pill cursor-pointer" data-fill={e} data-fill-dir="de-us">{e}</button>)}
+      </p>
+
+      <article class="prose-page mx-auto mt-16 max-w-[720px]" data-scroll-reveal>
+        <h2>German grade to GPA chart</h2>
+        <p>Every German grade from 1,0 to 4,0 and its estimated US GPA. German grades are written with a decimal comma, so 2,3 means 2.3.</p>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          {[rows.slice(0, half), rows.slice(half)].map((part) => (
+            <div class="card overflow-hidden">
+              <table class="tbl">
+                <thead><tr><th scope="col">German grade</th><th scope="col">US GPA</th></tr></thead>
+                <tbody>{part.map((r) => <tr><td class="num">{de(r.g)}</td><td class="num">{r.us.toFixed(2)}</td></tr>)}</tbody>
+              </table>
+            </div>
+          ))}
+        </div>
+
+        <h2>The formula</h2>
+        <p>German universities convert foreign grades with the <strong>modified Bavarian formula</strong>:</p>
+        <p class="num rounded-md bg-[var(--soft)] px-4 py-3 text-[var(--ink)]">German grade = 1 + 3 × (Nmax − Nd) / (Nmax − Nmin)</p>
+        <p>Nmax is the best possible grade (4.0 GPA), Nmin the lowest passing grade (usually taken as 2.0 GPA), and Nd your grade. Turned around, it gives the US GPA for a German grade:</p>
+        <p class="num rounded-md bg-[var(--soft)] px-4 py-3 text-[var(--ink)]">GPA = 4.0 − (German grade − 1) × 2/3</p>
+        <p>Some schools treat 1.0 as the lowest passing GPA instead of 2.0, which gives a worse German grade for the same GPA. The result is always an estimate, not an official equivalency.</p>
+
+        <h2>More tools</h2>
+        <ul>
+          <li><a href="/#calculator">High School GPA Calculator</a>: work out your GPA from your classes, then switch the result to German grades.</li>
+          <li><a href="/de/abi-rechner/" hreflang="de" lang="de">Abi-Rechner</a> (German): calculate the Abitur grade from Block I and Block II points.</li>
+        </ul>
+      </article>
+
+      <section aria-labelledby="faq-heading" class="mx-auto mt-16 w-full max-w-[720px]" data-scroll-reveal>
+        <h2 id="faq-heading">Frequently Asked Questions</h2>
+        <div class="mt-6 divide-y divide-[var(--hairline)] overflow-hidden rounded-xl border border-[var(--hairline)] bg-[var(--elevated)]">
+          {faqs.map((f) => (
+            <details class="group">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-left text-base font-medium text-[var(--ink)] transition-colors hover:bg-[var(--soft)] [&::-webkit-details-marker]:hidden">
+                <span>{f.question}</span>
+                <svg class="size-4 shrink-0 text-[var(--mute)] transition-transform duration-200 group-open:rotate-180" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg>
+              </summary>
+              <div class="px-5 pb-5 text-[15px] leading-relaxed text-[var(--body)]"><p>{f.answer}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+    </div>
+  </main>
+  <SiteFooter />
+</Layout>

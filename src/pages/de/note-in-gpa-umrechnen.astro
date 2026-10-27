@@ -1,0 +1,117 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import GradeConverter from '../../components/GradeConverter.astro';
+import { faqSchema, type Faq } from '../../data/faqs';
+import { germanToUs } from '../../scripts/convert';
+
+const title = 'Note in GPA umrechnen: Rechner für Abi- und Schulnoten';
+const description = 'Rechne deine deutsche Note (z. B. Abiturnote) in einen US-GPA auf der 4,0-Skala um, oder einen GPA in eine deutsche Note. Mit der modifizierten bayerischen Formel und kompletter Tabelle.';
+const path = '/de/note-in-gpa-umrechnen/';
+const alternates = [
+  { hreflang: 'en-US', href: '/german-grade-to-gpa/' },
+  { hreflang: 'de-DE', href: path },
+  { hreflang: 'x-default', href: '/german-grade-to-gpa/' },
+];
+const rows = Array.from({ length: 31 }, (_, i) => Math.round((1 + i / 10) * 10) / 10).map((g) => ({ g, us: germanToUs(g) }));
+const half = Math.ceil(rows.length / 2);
+const de = (n: number) => n.toFixed(1).replace('.', ',');
+const examples = ['1,0', '1,5', '2,0', '2,5', '3,0'];
+
+const faqs: Faq[] = [
+  {
+    question: 'Wie rechne ich meine Note in einen GPA um?',
+    answer: 'Mit der umgestellten modifizierten bayerischen Formel: GPA = 4,0 − (Note − 1) × 2/3. Eine 1,0 entspricht einem GPA von 4.0, eine 2,5 einem GPA von 3.0 und eine 4,0 (gerade noch bestanden) einem GPA von 2.0.',
+  },
+  {
+    question: 'Welcher GPA entspricht einer Abiturnote von 1,5?',
+    answer: 'Eine 1,5 entspricht etwa einem GPA von 3.67. Für eine 2,0 sind es rund 3.33 und für eine 3,0 rund 2.67. Die vollständige Tabelle findest du auf dieser Seite.',
+  },
+  {
+    question: 'Ist die Umrechnung offiziell?',
+    answer: 'Nein. Eine offizielle Umrechnung zwischen deutschen Noten und dem US-GPA gibt es nicht. US-Colleges lassen deutsche Zeugnisse oft von Diensten wie WES bewerten. Nutze das Ergebnis als Schätzung, zum Beispiel für Bewerbungen oder Stipendien.',
+  },
+  {
+    question: 'Wie rechne ich einen amerikanischen GPA in eine deutsche Note um?',
+    answer: 'Deutsche Unis nutzen dafür die modifizierte bayerische Formel: Note = 1 + 3 × (4,0 − GPA) / (4,0 − 2,0). Ein GPA von 3.5 ergibt 1,75, also die Note 1,7. Klicke im Rechner auf den Tausch-Button, um die Richtung zu wechseln.',
+  },
+];
+---
+<Layout title={title} description={description} path={path} type="app" alternates={alternates}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema(faqs))} />
+  <SiteHeader />
+  <main id="main">
+    <section class="relative isolate overflow-hidden">
+      <div class="mesh" aria-hidden="true"></div>
+      <div class="wrap py-12 text-center md:py-16">
+        <p class="eyebrow m-0">Kostenlos · Sofort · Ohne Anmeldung</p>
+        <h1 class="mx-auto mt-4 max-w-[16ch]">Note in GPA umrechnen</h1>
+        <p class="mx-auto mt-4 mb-0 max-w-[58ch] text-base leading-6">Gib deine deutsche Note ein und sieh sofort den US-GPA. Mit dem Tausch-Button rechnest du einen GPA in eine deutsche Note um. Grundlage ist die modifizierte bayerische Formel, die auch deutsche Hochschulen verwenden.</p>
+      </div>
+    </section>
+
+    <div class="wrap pb-16">
+      <GradeConverter t={{
+        de: 'Deutsche Note', us: 'US-GPA', swap: 'Richtung tauschen', input: 'Note eingeben', result: 'Ergebnis',
+        phDe: 'z. B. 2,3', phUs: 'z. B. 3.5',
+        hintDe: 'Deutsche Noten von 1,0 (beste) bis 6,0. Komma oder Punkt sind beide okay.',
+        hintUs: 'GPA auf der 4,0-Skala. Ein gewichteter GPA über 4,0 zählt als 1,0.',
+        invalidDe: 'Gib eine Note zwischen 1,0 und 6,0 ein.',
+        invalidUs: 'Gib einen GPA zwischen 0 und 5,0 ein.',
+        failDe: 'Noten über 4,0 gelten in Deutschland als nicht bestanden.',
+        failUs: 'Unter einem GPA von 2,0 liegt das Ergebnis außerhalb des Bestehensbereichs (schlechter als 4,0).',
+        topUs: 'Ein gewichteter GPA über 4,0 entspricht der Bestnote 1,0.',
+        empty: 'Dein Ergebnis erscheint hier, während du tippst.',
+      }} />
+      <p class="no-print mx-auto mt-4 flex max-w-[560px] flex-wrap items-center justify-center gap-2 text-[13px]">
+        <span class="text-[var(--mute)]">Beispiele:</span>
+        {examples.map((e) => <button type="button" class="pill cursor-pointer" data-fill={e} data-fill-dir="de-us">{e}</button>)}
+      </p>
+
+      <article class="prose-page mx-auto mt-16 max-w-[720px]" data-scroll-reveal>
+        <h2>Umrechnungstabelle: Note in GPA</h2>
+        <p>Alle Noten von 1,0 bis 4,0 mit dem geschätzten US-GPA. In den USA schreibt man den GPA mit Punkt, also 3.33 statt 3,33.</p>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          {[rows.slice(0, half), rows.slice(half)].map((part) => (
+            <div class="card overflow-hidden">
+              <table class="tbl">
+                <thead><tr><th scope="col">Note</th><th scope="col">US-GPA</th></tr></thead>
+                <tbody>{part.map((r) => <tr><td class="num">{de(r.g)}</td><td class="num">{r.us.toFixed(2)}</td></tr>)}</tbody>
+              </table>
+            </div>
+          ))}
+        </div>
+
+        <h2>Die Formel</h2>
+        <p>Deutsche Hochschulen rechnen ausländische Noten mit der <strong>modifizierten bayerischen Formel</strong> um:</p>
+        <p class="num rounded-md bg-[var(--soft)] px-4 py-3 text-[var(--ink)]">Note = 1 + 3 × (Nmax − Nd) / (Nmax − Nmin)</p>
+        <p>Nmax ist die beste Note (GPA 4,0), Nmin die schlechteste bestandene Note (meist GPA 2,0) und Nd deine Note. Umgestellt ergibt sich der GPA für eine deutsche Note:</p>
+        <p class="num rounded-md bg-[var(--soft)] px-4 py-3 text-[var(--ink)]">GPA = 4,0 − (Note − 1) × 2/3</p>
+        <p>Manche Schulen setzen als schlechteste bestandene Note einen GPA von 1,0 an. Dann fällt die deutsche Note für denselben GPA schlechter aus. Das Ergebnis ist immer eine Schätzung und keine offizielle Anerkennung.</p>
+
+        <h2>Weitere Rechner</h2>
+        <ul>
+          <li><a href="/de/abi-rechner/">Abi-Rechner</a>: Berechne deinen Abiturschnitt aus Block I und Block II, und lass ihn dir auch als US-GPA anzeigen.</li>
+          <li><a href="/#calculator" hreflang="en" lang="en">High School GPA Calculator</a> (Englisch): So berechnen amerikanische Schulen den GPA.</li>
+        </ul>
+      </article>
+
+      <section aria-labelledby="faq-heading" class="mx-auto mt-16 w-full max-w-[720px]" data-scroll-reveal>
+        <h2 id="faq-heading">Häufige Fragen</h2>
+        <div class="mt-6 divide-y divide-[var(--hairline)] overflow-hidden rounded-xl border border-[var(--hairline)] bg-[var(--elevated)]">
+          {faqs.map((f) => (
+            <details class="group">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-left text-base font-medium text-[var(--ink)] transition-colors hover:bg-[var(--soft)] [&::-webkit-details-marker]:hidden">
+                <span>{f.question}</span>
+                <svg class="size-4 shrink-0 text-[var(--mute)] transition-transform duration-200 group-open:rotate-180" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg>
+              </summary>
+              <div class="px-5 pb-5 text-[15px] leading-relaxed text-[var(--body)]"><p>{f.answer}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+    </div>
+  </main>
+  <SiteFooter />
+</Layout>

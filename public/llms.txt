@@ -5,6 +5,8 @@
 ## Tool
 - [High School GPA Calculator](https://hsgpacalc.com/): the calculator, plus FAQ and what counts as a good GPA
 - [Calculadora de GPA (Español)](https://hsgpacalc.com/es/): Spanish version
+- [German Grade to GPA Converter](https://hsgpacalc.com/german-grade-to-gpa/): German grade (Note) ⇄ US GPA via the modified Bavarian formula, with full chart
+- [Note in GPA umrechnen (Deutsch)](https://hsgpacalc.com/de/note-in-gpa-umrechnen/): German version of the converter
 - [Abi-Rechner (Deutsch)](https://hsgpacalc.com/de/abi-rechner/): German Abitur grade calculator (Block I + Block II, KMK formula N = 17/3 − E/180)
 
 ## Guides

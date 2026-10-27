@@ -9,6 +9,9 @@ export const DEFAULT_LANG: Lang = 'en';
 /** hreflang codes for each locale. */
 export const HREFLANG: Record<Lang, string> = { en: 'en-US', es: 'es', de: 'de-DE' };
 
+/** English pages that have a German counterpart (German only has a few standalone tools). */
+export const DE_PAIRS: Record<string, string> = { '/german-grade-to-gpa/': '/de/note-in-gpa-umrechnen/' };
+
 const dicts: Record<Lang, Dict> = { en, es, de };
 
 export function getLang(locale: string | undefined): Lang {

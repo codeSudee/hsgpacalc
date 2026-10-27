@@ -12,6 +12,8 @@ interface Props {
   type?: 'app' | 'page' | 'article';
   /** Page has no translation: omit hreflang alternates. */
   enOnly?: boolean;
+  /** Explicit hreflang alternates (absolute paths), for pages translated outside the en/es site set. */
+  alternates?: { hreflang: string; href: string }[];
   heading?: string;
   published?: string;
   modified?: string;
@@ -26,13 +28,16 @@ const {
   noindex = false,
   type = 'app',
   enOnly = false,
+  alternates: altPaths,
   heading,
   published,
   modified,
 } = Astro.props;
 
 const canonical = new URL(localePath(lang, path), SITE_URL).href;
-const alternates = noindex || enOnly
+const alternates = altPaths
+  ? altPaths.map((a) => ({ hreflang: a.hreflang, href: new URL(a.href, SITE_URL).href }))
+  : noindex || enOnly
   ? []
   : [
       ...LANGS.map((l) => ({ hreflang: HREFLANG[l], href: new URL(localePath(l, path), SITE_URL).href })),

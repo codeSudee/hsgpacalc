@@ -10,8 +10,9 @@ export function usToGerman(gpa: number): number {
   return Math.max(1, Math.min(6, Math.floor(n * 10 + 1e-9) / 10));
 }
 
-/** German grade → US GPA on a 4.0 scale, rounded to two decimals, never below 0. */
-export function germanToUs(note: number): number {
-  const g = US_MAX - ((note - 1) * (US_MAX - US_PASS)) / 3;
-  return Math.max(0, Math.min(US_MAX, Math.round(g * 100) / 100));
+/** German grade → US GPA on a 4.0 scale, unrounded, never below 0. */
+export function germanToUsExact(note: number): number {
+  return Math.max(0, Math.min(US_MAX, US_MAX - ((note - 1) * (US_MAX - US_PASS)) / 3));
 }
+/** German grade → US GPA rounded to two decimals. */
+export const germanToUs = (note: number): number => Math.round(germanToUsExact(note) * 100) / 100;

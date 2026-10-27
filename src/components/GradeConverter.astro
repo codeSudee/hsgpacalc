@@ -1,0 +1,34 @@
+---
+// Standalone US GPA ⇄ German grade converter. Strings come from the page so it works in English and German.
+interface Props {
+  t: {
+    de: string; us: string; swap: string; input: string; result: string;
+    phDe: string; phUs: string; hintDe: string; hintUs: string;
+    invalidDe: string; invalidUs: string; failDe: string; failUs: string; topUs: string; empty: string;
+  };
+}
+const { t } = Astro.props;
+---
+<div id="calculator" class="card mx-auto max-w-[560px] p-5 md:p-6" data-conv data-dir="de-us" data-reveal>
+  <div class="flex items-center justify-between gap-3">
+    <span class="text-[15px] font-medium text-[var(--ink)]" data-from>{t.de}</span>
+    <button type="button" class="btn btn-icon no-print" data-swap aria-label={t.swap} title={t.swap}>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5h11l-3-3M14 11H3l3 3"/></svg>
+    </button>
+    <span class="text-right text-[15px] font-medium text-[var(--ink)]" data-to>{t.us}</span>
+  </div>
+  <label class="mt-5 block">
+    <span class="lbl" data-in-label>{t.input} ({t.de})</span>
+    <input class="field num !text-[22px] !leading-8" data-in type="text" inputmode="decimal" autocomplete="off" spellcheck="false" maxlength="5" placeholder={t.phDe} aria-describedby="conv-hint" />
+  </label>
+  <p id="conv-hint" class="mt-1 mb-0 text-xs text-[var(--mute)]" data-hint>{t.hintDe}</p>
+  <div class="mt-5 rounded-md bg-[var(--soft)] p-4" aria-live="polite">
+    <p class="eyebrow m-0" data-out-label>{t.result}: {t.us}</p>
+    <p class="num m-0 mt-1 text-[44px] leading-none font-medium text-[var(--ink)]" data-out>–</p>
+    <p class="m-0 mt-2 text-[13px]" data-msg>{t.empty}</p>
+  </div>
+</div>
+<script type="application/json" id="conv-i18n" set:html={JSON.stringify(t)} />
+<script>
+  import '../scripts/converter';
+</script>
