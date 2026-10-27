@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500;600&display=block" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* Palette follows the site's DESIGN.md: one ink tone, near-white canvas, blue accent, mesh gradient for hero moments. */
+      :root {
+        --night: #06070b;
+        --canvas: #fafafa;
+        --elevated: #ffffff;
+        --ink: #171717;
+        --body: #4d4d4d;
+        --mute: #666666;
+        --hairline: #ebebeb;
+        --soft: #f2f2f2;
+        --blue: #0070f3;
+        --blue-soft: #d3e5ff;
+        --cyan: #00dfd8;
+        --violet: #7928ca;
+        --pink: #ff0080;
+        --amber: #f9cb28;
+        --green: #17a34a;
+        --font: "Geist", Arial, sans-serif;
+        --mono: "Geist Mono", ui-monospace, monospace;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--night); }
+      #root { position: relative; width: 100%; height: 100%; font-family: var(--font); color: var(--ink); overflow: hidden; }
+      .clip { position: absolute; inset: 0; overflow: hidden; }
+      .center { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+
+      /* ---------- scene 1: 1 AM ---------- */
+      #s1 { background: radial-gradient(1200px 800px at 70% 20%, #101a33 0%, var(--night) 60%); color: #e8ecf5; }
+      #s1 .glow { position: absolute; width: 900px; height: 900px; left: 1050px; top: -300px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(0,112,243,.35), rgba(0,112,243,0) 65%); }
+      #clock { position: absolute; top: 120px; width: 100%; text-align: center; font-family: var(--mono); font-size: 150px; font-weight: 600; letter-spacing: -4px; color: #f4f6fb; }
+      #clock .colon { display: inline-block; }
+      #clockSub { position: absolute; top: 315px; width: 100%; text-align: center; font-family: var(--mono); font-size: 26px; letter-spacing: 8px; color: #6f7ba0; text-transform: uppercase; }
+      #s1line1 { position: absolute; top: 450px; width: 100%; text-align: center; font-size: 64px; font-weight: 600; letter-spacing: -2px; }
+      .q { position: absolute; padding: 18px 30px; border-radius: 999px; font-size: 32px; font-weight: 500; color: #c9d2ea;
+        background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); white-space: nowrap; }
+      #ontrack { position: absolute; top: 560px; width: 100%; text-align: center; font-size: 132px; font-weight: 800; letter-spacing: -6px; color: #fff; }
+      #ontrack em { font-style: normal; background: linear-gradient(90deg, #7aa7ff, #b18cff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      #owlWorry { position: absolute; left: 160px; bottom: 90px; width: 190px; height: 190px; }
+
+      /* ---------- scene 2: breathe ---------- */
+      #bloom { position: absolute; left: 960px; top: 540px; width: 200px; height: 200px; margin: -100px 0 0 -100px; border-radius: 50%; background: var(--canvas); }
+      .mesh { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .55; }
+      #breathe { font-size: 170px; font-weight: 700; letter-spacing: -8px; }
+      #easier { margin-top: 18px; font-size: 56px; font-weight: 500; letter-spacing: -1.6px; color: var(--body); }
+      .brand { display: inline-flex; align-items: center; gap: 18px; margin-top: 56px; padding: 18px 34px 18px 22px; border-radius: 999px;
+        background: var(--ink); color: #fff; font-size: 38px; font-weight: 600; letter-spacing: -1px; }
+      .brand .mark { width: 54px; height: 54px; border-radius: 14px; background: linear-gradient(135deg, var(--blue), var(--cyan)); display: grid; place-items: center; font-size: 26px; font-weight: 800; }
+
+      /* ---------- light scenes share a canvas ---------- */
+      .light { background: var(--canvas); }
+      .grid-bg { position: absolute; inset: 0; background-image: linear-gradient(var(--hairline) 1px, transparent 1px), linear-gradient(90deg, var(--hairline) 1px, transparent 1px);
+        background-size: 80px 80px; opacity: .55; }
+      .eyebrow { font-family: var(--mono); font-size: 22px; letter-spacing: 4px; text-transform: uppercase; color: var(--mute); }
+      .card { position: absolute; background: var(--elevated); border: 1px solid var(--hairline); border-radius: 28px;
+        box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 30px 80px -30px rgba(0,0,0,.18); }
+
+      /* scene 3: calculator */
+      #calc { left: 150px; top: 150px; width: 930px; height: 700px; padding: 44px 48px; }
+      #calc h3 { font-size: 34px; font-weight: 600; letter-spacing: -1px; display: flex; justify-content: space-between; align-items: baseline; }
+      #calc h3 span { font-family: var(--mono); font-size: 20px; color: var(--mute); font-weight: 500; letter-spacing: 1px; }
+      .row { display: grid; grid-template-columns: 1fr 120px 170px; align-items: center; gap: 20px; height: 92px; margin-top: 14px;
+        padding: 0 26px; border: 1px solid var(--hairline); border-radius: 18px; background: var(--canvas); font-size: 30px; font-weight: 500; }
+      .row .grade { font-family: var(--mono); font-weight: 600; font-size: 32px; text-align: center; }
+      .pills { position: relative; justify-self: end; height: 40px; width: 170px; }
+      .pill { position: absolute; right: 0; top: 0; padding: 8px 18px; border-radius: 999px; font-size: 20px; font-weight: 600; letter-spacing: .5px; font-family: var(--mono); white-space: nowrap; }
+      .pill.new { opacity: 0; }
+      .pill.cp { background: var(--soft); color: var(--mute); }
+      .pill.hon { background: #ede4fb; color: var(--violet); }
+      .pill.ap { background: var(--blue-soft); color: var(--blue); }
+      .pill.ib { background: #ffe9f3; color: #c00062; }
+      #gauges { position: absolute; left: 1150px; top: 150px; width: 620px; height: 700px; display: flex; flex-direction: column; gap: 30px; }
+      .gauge { position: relative; flex: 1; padding: 34px 44px; display: flex; align-items: center; gap: 40px; }
+      .gauge svg { width: 250px; height: 250px; flex: none; transform: rotate(-90deg); }
+      .gauge .track { stroke: var(--soft); }
+      .gauge .num { font-size: 104px; font-weight: 700; letter-spacing: -5px; font-variant-numeric: tabular-nums; line-height: 1; }
+      .gauge .lbl { font-size: 26px; color: var(--mute); font-weight: 500; margin-top: 10px; }
+      #wglow { position: absolute; inset: -2px; border-radius: 28px; box-shadow: 0 0 0 4px rgba(0,112,243,.5), 0 0 80px 10px rgba(0,112,243,.35); opacity: 0; }
+
+      /* captions for UI scenes */
+      .cap { position: absolute; left: 0; right: 0; bottom: 70px; text-align: center; font-size: 40px; font-weight: 600; letter-spacing: -1px; opacity: 0; }
+      .cap span { display: inline-block; padding: 14px 30px; border-radius: 16px; background: var(--ink); color: #fff; }
+
+      /* scene 4: trend */
+      #trend { left: 260px; top: 130px; width: 1400px; height: 740px; padding: 50px 70px; }
+      #trend h3 { font-size: 40px; font-weight: 600; letter-spacing: -1.4px; }
+      #bars { position: absolute; left: 140px; right: 140px; bottom: 110px; height: 440px; display: flex; align-items: flex-end; justify-content: space-around; }
+      .bar { position: relative; width: 170px; border-radius: 18px 18px 6px 6px; background: linear-gradient(180deg, var(--blue), #3d8bff); transform-origin: bottom; }
+      .bar b { position: absolute; top: -62px; left: 0; right: 0; text-align: center; font-size: 38px; font-weight: 700; letter-spacing: -1px; color: var(--ink); }
+      .bar i { position: absolute; bottom: -62px; left: 0; right: 0; text-align: center; font-style: normal; font-size: 26px; color: var(--mute); font-weight: 500; }
+      #target { position: absolute; left: 110px; right: 110px; height: 0; border-top: 4px dashed var(--pink); transform-origin: left; }
+      #target span { position: absolute; left: 0; top: -44px; font-family: var(--mono); font-size: 22px; font-weight: 600; color: var(--pink); }
+      #ontrackBadge { position: absolute; right: 70px; top: 46px; display: flex; align-items: center; gap: 14px; padding: 14px 26px; border-radius: 999px;
+        background: #e6f7ec; color: var(--green); font-size: 30px; font-weight: 600; }
+
+      /* scene 5: promises */
+      #promises { position: absolute; left: 0; right: 0; top: 230px; display: flex; justify-content: center; gap: 48px; }
+      .promise { position: relative; width: 500px; height: 420px; padding: 54px; display: flex; flex-direction: column; justify-content: space-between; }
+      .promise .ico { width: 110px; height: 110px; border-radius: 30px; display: grid; place-items: center; }
+      .promise .ico svg { width: 58px; height: 58px; }
+      .promise h4 { white-space: nowrap; font-size: 66px; font-weight: 700; letter-spacing: -3px; }
+      .promise p { font-size: 26px; color: var(--mute); margin-top: 8px; font-weight: 500; }
+      #device { position: absolute; left: 0; right: 0; top: 740px; text-align: center; font-size: 50px; font-weight: 600; letter-spacing: -1.4px; color: var(--body); }
+      #device b { color: var(--ink); }
+
+      /* scene 6: finale */
+      #s6 { background: var(--canvas); }
+      #owlHero { width: 330px; height: 330px; overflow: visible; }
+      #gotthis { margin-top: 10px; font-size: 140px; font-weight: 800; letter-spacing: -7px; line-height: 1.05; }
+      #url { margin-top: 34px; padding: 22px 52px; border-radius: 999px; font-size: 64px; font-weight: 700; letter-spacing: -2px; color: #fff;
+        background: linear-gradient(90deg, var(--blue), var(--violet) 55%, var(--pink)); box-shadow: 0 30px 80px -20px rgba(121,40,202,.55); }
+      #tagline { margin-top: 30px; font-size: 30px; color: var(--mute); font-weight: 500; }
+      .confetti { position: absolute; left: 960px; top: 430px; width: 18px; height: 30px; border-radius: 4px; }
+      #flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="34" data-width="1920" data-height="1080">
+
+      <!-- Soundtrack: score + SFX + voiceover, mixed by audio/build_audio.py -->
+      <audio id="mix" src="assets/mix.wav" data-start="0" data-duration="34" data-track-index="9" data-volume="1"></audio>
+
+      <!-- Scene 1: 1 AM, anxious -->
+      <section id="s1" class="clip" data-start="0" data-duration="7.9" data-track-index="0">
+        <div class="glow"></div>
+        <div id="clock">1<span class="colon">:</span>04 AM</div>
+        <div id="clockSub">The night before report cards</div>
+        <div id="s1line1">Report cards come out tomorrow.</div>
+        <div class="q" id="q1" style="left:170px; top:600px">Is a B+ in AP good?</div>
+        <div class="q" id="q2" style="left:1290px; top:470px">Weighted or unweighted?</div>
+        <div class="q" id="q3" style="left:1180px; top:820px">What GPA do colleges want?</div>
+        <div class="q" id="q4" style="left:560px; top:880px">Did that C sink me?</div>
+        <div id="ontrack">am I <em>on track?</em></div>
+        <svg id="owlWorry" viewBox="0 0 96 96" fill="none" stroke="#c9d2ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M38 88v4M44 88v4M52 88v4M58 88v4" stroke="#6f7ba0" />
+          <path d="M24 36 22 16 40 28Z M72 36 74 16 56 28Z" fill="#1b2240" />
+          <ellipse cx="48" cy="56" rx="28" ry="31" fill="#1b2240" />
+          <path d="M38 74q10 6 20 0M40 80q8 4 16 0" stroke="#6f7ba0" />
+          <circle cx="36" cy="48" r="10" fill="#0d1226" /><circle cx="60" cy="48" r="10" fill="#0d1226" />
+          <g id="pupils"><circle cx="36" cy="50" r="4" fill="#e8ecf5" /><circle cx="60" cy="50" r="4" fill="#e8ecf5" /></g>
+          <path d="M27 38l15 5M69 38l-15 5" stroke-width="3" />
+          <path d="M44 57l4 8 4-8Z" fill="#f5a623" stroke="#f5a623" />
+          <path d="M21 56q-8 14 5 26M75 56q8 14-5 26" fill="#0d1226" />
+        </svg>
+      </section>
+
+      <!-- Scene 2: breathe -->
+      <section id="s2" class="clip center" data-start="6.9" data-duration="3.4" data-track-index="1">
+        <div id="bloom"></div>
+        <div class="mesh" id="m1" style="width:700px;height:700px;left:200px;top:-200px;background:var(--cyan)"></div>
+        <div class="mesh" id="m2" style="width:700px;height:700px;left:1100px;top:500px;background:var(--violet)"></div>
+        <div class="mesh" id="m3" style="width:500px;height:500px;left:1200px;top:-100px;background:var(--pink)"></div>
+        <div style="position:relative" class="center" id="s2c">
+          <div id="breathe">Breathe.</div>
+          <div id="easier">There's an easier way.</div>
+          <div class="brand" id="brand"><span class="mark">A+</span>HS GPA Calc</div>
+        </div>
+      </section>
+
+      <!-- Scene 3: calculator -->
+      <section id="s3" class="clip light" data-start="10" data-duration="9.2" data-track-index="2">
+        <div class="grid-bg"></div>
+        <div class="card" id="calc">
+          <h3>10th Grade <span>2025–26 · 5 CLASSES</span></h3>
+          <div class="row"><div>AP Biology</div><div class="grade">A−</div><div class="pills"><div class="pill cp">REGULAR</div><div class="pill new ap">AP</div></div></div>
+          <div class="row"><div>English 10</div><div class="grade">B+</div><div class="pills"><div class="pill cp">REGULAR</div><div class="pill new hon">HONORS</div></div></div>
+          <div class="row"><div>Algebra II</div><div class="grade">A</div><div class="pills"><div class="pill cp">REGULAR</div></div></div>
+          <div class="row"><div>IB Spanish</div><div class="grade">A−</div><div class="pills"><div class="pill cp">REGULAR</div><div class="pill new ib">IB</div></div></div>
+          <div class="row"><div>World History</div><div class="grade">B+</div><div class="pills"><div class="pill cp">REGULAR</div></div></div>
+        </div>
+        <div id="gauges">
+          <div class="card gauge" id="gW">
+            <div id="wglow"></div>
+            <svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50" stroke-width="12" fill="none" />
+              <circle id="ringW" cx="60" cy="60" r="50" stroke="url(#gradW)" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16" />
+              <defs><linearGradient id="gradW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0070f3" /><stop offset="1" stop-color="#7928ca" /></linearGradient></defs></svg>
+            <div><div class="num" id="numW">0.00</div><div class="lbl">Weighted GPA</div></div>
+          </div>
+          <div class="card gauge" id="gU">
+            <svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="50" stroke-width="12" fill="none" />
+              <circle id="ringU" cx="60" cy="60" r="50" stroke="#171717" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16" /></svg>
+            <div><div class="num" id="numU">0.00</div><div class="lbl">Unweighted GPA</div></div>
+          </div>
+        </div>
+        <div class="cap" id="c3a"><span>Add your classes.</span></div>
+        <div class="cap" id="c3b"><span>Mark them Honors, AP, or IB.</span></div>
+        <div class="cap" id="c3c"><span>Weighted + unweighted GPA, instantly.</span></div>
+      </section>
+
+      <!-- Scene 4: target + trend -->
+      <section id="s4" class="clip light" data-start="18.8" data-duration="4.2" data-track-index="3">
+        <div class="grid-bg"></div>
+        <div class="card" id="trend">
+          <div class="eyebrow">Yearly trend</div>
+          <h3 style="margin-top:10px">Your GPA, year by year</h3>
+          <div id="ontrackBadge">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10" /></svg>
+            On track
+          </div>
+          <div id="bars">
+            <div class="bar" style="height:290px"><b>3.31</b><i>9th</i></div>
+            <div class="bar" style="height:330px"><b>3.52</b><i>10th</i></div>
+            <div class="bar" style="height:365px"><b>3.74</b><i>11th</i></div>
+            <div class="bar" style="height:395px"><b>3.90</b><i>12th</i></div>
+          </div>
+          <div id="target" style="bottom:485px"><span>TARGET 3.80</span></div>
+        </div>
+        <div class="cap" id="c4a"><span>Set a target. See your progress, year by year.</span></div>
+      </section>
+
+      <!-- Scene 5: free, private, no sign-up -->
+      <section id="s5" class="clip light" data-start="22.6" data-duration="5.6" data-track-index="4">
+        <div class="grid-bg"></div>
+        <div id="promises">
+          <div class="card promise" id="p1">
+            <div class="ico" style="background:#e6f7ec;color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 21V7M12 7H7.5a2.5 2.5 0 1 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 1 0 0-5C13 2 12 7 12 7z" /></svg></div>
+            <div><h4>Free.</h4><p>Every feature, forever.</p></div>
+          </div>
+          <div class="card promise" id="p2">
+            <div class="ico" style="background:var(--blue-soft);color:var(--blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg></div>
+            <div><h4>Private.</h4><p>Stored only in your browser.</p></div>
+          </div>
+          <div class="card promise" id="p3">
+            <div class="ico" style="background:#ede4fb;color:var(--violet)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-6 8-6s8 2 8 6M3 3l18 18" /></svg></div>
+            <div><h4>No sign-up.</h4><p>Open it and start.</p></div>
+          </div>
+        </div>
+        <div id="device">Your grades <b>never leave your device.</b></div>
+      </section>
+
+      <!-- Scene 6: you've got this -->
+      <section id="s6" class="clip center" data-start="27.9" data-duration="6.1" data-track-index="5">
+        <div class="mesh" id="m4" style="width:800px;height:800px;left:-200px;top:400px;background:var(--cyan);opacity:.35"></div>
+        <div class="mesh" id="m5" style="width:800px;height:800px;left:1300px;top:-300px;background:var(--pink);opacity:.3"></div>
+        <div id="confettiLayer" style="position:absolute;inset:0"></div>
+        <div class="center" style="position:relative" id="s6c">
+          <svg id="owlHero" viewBox="0 0 96 96" fill="none" stroke="#171717" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M38 88v4M44 88v4M52 88v4M58 88v4" stroke="#8f8f8f" />
+            <path d="M24 36 22 16 40 28Z M72 36 74 16 56 28Z" fill="#f2f2f2" />
+            <ellipse cx="48" cy="56" rx="28" ry="31" fill="#f2f2f2" />
+            <path d="M38 74q10 6 20 0M40 80q8 4 16 0" stroke="#8f8f8f" />
+            <path d="M27 51q9-11 18 0M51 51q9-11 18 0" stroke-width="3" />
+            <path d="M44 57l4 8 4-8Z" fill="#0070f3" stroke="#0070f3" />
+            <g id="wings"><path d="M22 58 8 42q-2 14 8 28M74 58 88 42q2 14-8 28" fill="#fff" /></g>
+            <g id="cap"><path d="M28 20 48 11l20 9-20 9Z" fill="#171717" /><path d="M68 20v10" stroke="#0070f3" /></g>
+            <path id="spark" d="M10 22v8M6 26h8M86 14v6M83 17h6" stroke="#0070f3" />
+          </svg>
+          <div id="gotthis">You've got this.</div>
+          <div id="url">hsgpacalc.com</div>
+          <div id="tagline">Free high school GPA calculator · Weighted &amp; unweighted · AP, Honors, IB</div>
+        </div>
+        <div id="flash"></div>
+      </section>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const ease = "power3.out";
+
+      // ---------- Scene 1 (0–7): anxious ----------
+      tl.fromTo("#s1 .glow", { opacity: 0.4, scale: 0.9 }, { opacity: 1, scale: 1.1, duration: 7, ease: "sine.inOut" }, 0);
+      tl.fromTo("#clock", { opacity: 0, y: 30, filter: "blur(12px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.1, ease }, 0.2);
+      for (let k = 0; k < 7; k++) tl.to("#clock .colon", { opacity: k % 2 ? 1 : 0.15, duration: 0.05 }, 0.75 + k * 0.5);
+      tl.fromTo("#clockSub", { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.2, ease }, 0.6);
+      tl.fromTo("#s1line1", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease }, 1.25);
+      tl.to(["#s1line1", "#clockSub"], { opacity: 0, y: -20, duration: 0.5, ease: "power2.in" }, 3.0);
+      tl.to("#clock", { scale: 0.55, y: -60, opacity: 0.5, duration: 0.8, ease: "power2.inOut" }, 3.0);
+      ["#q1", "#q2", "#q3", "#q4"].forEach((q, i) => {
+        tl.fromTo(q, { opacity: 0, scale: 0.85, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(2)" }, 2.6 + i * 0.35);
+        tl.to(q, { y: i % 2 ? -40 : 40, x: i % 2 ? 30 : -30, duration: 4, ease: "sine.inOut" }, 3.1 + i * 0.35);
+        tl.to(q, { opacity: 0.25, filter: "blur(4px)", duration: 0.6 }, 4.8);
+      });
+      tl.fromTo("#ontrack", { opacity: 0, scale: 1.25, filter: "blur(20px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.9, ease: "expo.out" }, 4.75);
+      // nervous micro-shake on the question
+      for (let k = 0; k < 8; k++) tl.to("#ontrack", { x: k % 2 ? 4 : -4, duration: 0.06 }, 5.8 + k * 0.06);
+      tl.to("#ontrack", { x: 0, duration: 0.06 }, 6.3);
+      tl.fromTo("#owlWorry", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.8, ease }, 1.6);
+      tl.to("#pupils", { x: -3, duration: 0.4, ease: "sine.inOut" }, 2.8);
+      tl.to("#pupils", { x: 3, duration: 0.4, ease: "sine.inOut" }, 3.6);
+      tl.to("#pupils", { x: 0, y: -2, duration: 0.4, ease: "sine.inOut" }, 4.6);
+      tl.to("#owlWorry", { y: 8, duration: 0.2, yoyo: true, repeat: 5, ease: "sine.inOut" }, 5.0);
+
+      // ---------- Scene 2 (7–10): relief ----------
+      tl.fromTo("#bloom", { scale: 0 }, { scale: 22, duration: 1.0, ease: "expo.inOut" }, 6.9);
+      tl.fromTo(["#m1", "#m2", "#m3"], { opacity: 0, scale: 0.6 }, { opacity: 0.55, scale: 1, duration: 1.6, stagger: 0.12, ease }, 7.3);
+      tl.to("#m1", { x: 120, y: 60, duration: 3, ease: "sine.inOut" }, 7.3);
+      tl.to("#m2", { x: -140, y: -80, duration: 3, ease: "sine.inOut" }, 7.3);
+      tl.fromTo("#breathe", { opacity: 0, scale: 1.12, filter: "blur(16px)" },
+        { opacity: 1, scale: 1, filter: "blur(0px)", duration: 1.3, ease: "expo.out" }, 7.35);
+      tl.fromTo("#easier", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7, ease }, 8.15);
+      tl.fromTo("#brand", { opacity: 0, y: 30, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "back.out(1.8)" }, 8.9);
+      tl.to("#s2c", { scale: 0.9, opacity: 0, filter: "blur(10px)", duration: 0.45, ease: "power2.in" }, 9.75);
+
+      // ---------- Scene 3 (10–19): the calculator ----------
+      tl.fromTo("#calc", { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: 0.8, ease }, 10.0);
+      tl.fromTo("#gauges .card", { opacity: 0, x: 80 }, { opacity: 1, x: 0, duration: 0.8, stagger: 0.12, ease }, 10.2);
+      gsap.utils.toArray("#calc .row").forEach((r, i) => {
+        tl.fromTo(r, { opacity: 0, y: 26, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "back.out(2)" }, 10.6 + i * 0.55);
+      });
+      // level badges stamp in: REGULAR fades out, the new level pops in
+      gsap.utils.toArray("#calc .pill.new").forEach((p, i) => {
+        const at = 13.4 + i * 0.6;
+        tl.to(p.previousElementSibling, { opacity: 0, scale: 0.6, duration: 0.15 }, at);
+        tl.fromTo(p, { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(3)" }, at + 0.05);
+      });
+      const gpa = { w: 0, u: 0 };
+      const C = 314.16;
+      tl.to(gpa, {
+        w: 4.08, u: 3.62, duration: 2.0, ease: "power2.out",
+        onUpdate: () => {
+          document.getElementById("numW").textContent = gpa.w.toFixed(2);
+          document.getElementById("numU").textContent = gpa.u.toFixed(2);
+          document.getElementById("ringW").style.strokeDashoffset = C * (1 - gpa.w / 5);
+          document.getElementById("ringU").style.strokeDashoffset = C * (1 - gpa.u / 4);
+        },
+      }, 15.0);
+      tl.fromTo("#wglow", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 17.0);
+      tl.to("#wglow", { opacity: 0, duration: 1.2 }, 17.3);
+      tl.fromTo("#gW", { scale: 1 }, { scale: 1.04, duration: 0.18, yoyo: true, repeat: 1, ease: "power2.out" }, 17.0);
+      // captions follow the voiceover phrases
+      [["#c3a", 10.3, 11.6], ["#c3b", 11.8, 14.4], ["#c3c", 14.6, 18.4]].forEach(([c, a, b]) => {
+        tl.fromTo(c, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease }, a);
+        tl.to(c, { opacity: 0, duration: 0.2 }, b);
+      });
+      tl.to(["#calc", "#gauges"], { x: -120, opacity: 0, filter: "blur(8px)", duration: 0.45, ease: "power2.in" }, 18.75);
+
+      // ---------- Scene 4 (19–22.8): trend + target ----------
+      tl.fromTo("#trend", { opacity: 0, x: 140, filter: "blur(8px)" }, { opacity: 1, x: 0, filter: "blur(0px)", duration: 0.6, ease }, 19.0);
+      tl.fromTo("#bars .bar", { scaleY: 0 }, { scaleY: 1, duration: 0.6, stagger: 0.25, ease: "back.out(1.4)" }, 19.9);
+      tl.fromTo("#bars .bar b", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.25 }, 20.3);
+      tl.fromTo("#target", { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "power2.inOut" }, 20.1);
+      tl.fromTo("#ontrackBadge", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2.5)" }, 21.4);
+      tl.fromTo("#c4a", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease }, 19.3);
+      tl.to("#c4a", { opacity: 0, duration: 0.2 }, 22.3);
+      tl.to("#trend", { y: -80, opacity: 0, filter: "blur(8px)", duration: 0.45, ease: "power2.in" }, 22.55);
+
+      // ---------- Scene 5 (22.8–28): promises ----------
+      [["#p1", 23.3], ["#p2", 24.4], ["#p3", 25.5]].forEach(([p, at]) => {
+        tl.fromTo(p, { opacity: 0, y: 80, rotation: -3 }, { opacity: 1, y: 0, rotation: 0, duration: 0.6, ease: "back.out(1.6)" }, at - 0.15);
+        tl.fromTo(p + " .ico", { scale: 0, rotation: -40 }, { scale: 1, rotation: 0, duration: 0.5, ease: "back.out(2.5)" }, at);
+      });
+      tl.fromTo("#device", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.6, ease }, 26.2);
+      tl.to("#promises .card", { y: 12, duration: 1.2, stagger: 0.1, ease: "sine.inOut" }, 26.4);
+      tl.to(["#promises", "#device"], { scale: 0.92, opacity: 0, filter: "blur(10px)", duration: 0.4, ease: "power2.in" }, 27.75);
+
+      // ---------- Scene 6 (28–34): you've got this ----------
+      tl.fromTo("#flash", { opacity: 0.9 }, { opacity: 0, duration: 0.6, ease: "power2.out" }, 27.95);
+      tl.fromTo(["#m4", "#m5"], { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 0.35, duration: 2, ease }, 28.0);
+      tl.fromTo("#owlHero", { opacity: 0, scale: 0.3, y: 120 }, { opacity: 1, scale: 1, y: 0, duration: 0.9, ease: "back.out(1.7)" }, 28.0);
+      tl.fromTo("#cap", { y: -40, rotation: -20, transformOrigin: "50% 50%" }, { y: 0, rotation: 0, duration: 0.6, ease: "bounce.out" }, 28.5);
+      tl.fromTo("#wings", { scaleY: 0.85, transformOrigin: "50% 60%" }, { scaleY: 1.08, duration: 0.25, yoyo: true, repeat: 5, ease: "sine.inOut" }, 28.6);
+      tl.fromTo("#spark", { opacity: 0, scale: 0.5, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(3)" }, 28.9);
+      tl.fromTo("#gotthis", { opacity: 0, y: 40, filter: "blur(14px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.9, ease: "expo.out" }, 28.6);
+      tl.fromTo("#url", { opacity: 0, scale: 0.7, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "back.out(2)" }, 30.9);
+      tl.to("#url", { scale: 1.05, duration: 0.6, yoyo: true, repeat: 3, ease: "sine.inOut" }, 31.6);
+      tl.fromTo("#tagline", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease }, 31.4);
+      tl.to("#owlHero", { y: -12, duration: 0.9, yoyo: true, repeat: 3, ease: "sine.inOut" }, 29.2);
+
+      // confetti: seeded PRNG keeps every render identical
+      let seed = 42;
+      const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+      const colors = ["#0070f3", "#00dfd8", "#7928ca", "#ff0080", "#f9cb28", "#17a34a"];
+      const layer = document.getElementById("confettiLayer");
+      for (let i = 0; i < 110; i++) {
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.background = colors[i % colors.length];
+        if (i % 3 === 0) { c.style.width = "16px"; c.style.height = "16px"; c.style.borderRadius = "50%"; }
+        layer.appendChild(c);
+        const ang = rand() * Math.PI * 2, pow = 350 + rand() * 650;
+        const dx = Math.cos(ang) * pow * 1.4, dy = Math.sin(ang) * pow * 0.8 - 250;
+        const at = 28.2 + rand() * 0.25;
+        tl.fromTo(c, { x: 0, y: 0, rotation: 0, opacity: 0, scale: 0.4 },
+          { x: dx, y: dy, rotation: rand() * 720 - 360, opacity: 1, scale: 1, duration: 0.9, ease: "expo.out", immediateRender: false }, at);
+        tl.to(c, { y: dy + 700 + rand() * 300, x: dx + (rand() - 0.5) * 200, rotation: "+=" + rand() * 540, duration: 3.2, ease: "power1.in" }, at + 0.9);
+        tl.to(c, { opacity: 0, duration: 0.8 }, at + 3.0);
+      }
+      gsap.set(".confetti", { opacity: 0 });
+      tl.to("#s6c", { opacity: 0, duration: 0.8 }, 33.2);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
