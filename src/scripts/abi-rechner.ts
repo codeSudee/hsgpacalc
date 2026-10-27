@@ -1,5 +1,6 @@
 import { gsap } from 'gsap';
 import { type AbiState, type Subject, MAX_TOTAL, de, fresh, newSubject, nextStep, points, result, sanitize } from './abi';
+import { germanToUs } from './convert';
 
 const KEY = 'abi-v1';
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -130,7 +131,23 @@ $('[data-action=sample]').addEventListener('click', () => {
 /* ---------- results ---------- */
 const gradeEl = $('[data-grade]');
 let shownGrade: number | null = null;
+/* Note ⇄ US-GPA view */
+let view: 'de' | 'us' = 'de';
+try { if (localStorage.getItem('abi-view') === 'us') view = 'us'; } catch {}
+function syncView() {
+  document.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === view)));
+  $('[data-us-note]').hidden = view !== 'us';
+}
+document.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((b) => b.addEventListener('click', () => {
+  view = b.dataset.view === 'us' ? 'us' : 'de';
+  try { localStorage.setItem('abi-view', view); } catch {}
+  syncView();
+  shownGrade = null;
+  refresh(false);
+}));
+
 function setGrade(g: number | null) {
+  if (view === 'us') { shownGrade = null; gradeEl.textContent = g === null ? '–' : germanToUs(g).toFixed(2); return; }
   const from = shownGrade;
   shownGrade = g;
   if (g === null || from === null || reduced || from === g) { gradeEl.textContent = g === null ? '–' : de(g); return; }
@@ -163,7 +180,9 @@ function refresh(persist = true) {
   const r = result(state);
   setGrade(r.grade);
   celebrate(r.grade);
-  $('[data-total]').textContent = r.total === null
+  $('[data-total]').textContent = r.total !== null && r.grade !== null && view === 'us'
+    ? `US-GPA · Note ${de(r.grade)}`
+    : r.total === null
     ? (r.b1.points === null ? 'Trage Punkte ein' : 'Prüfungspunkte fehlen')
     : `${r.total} von ${MAX_TOTAL} Punkten`;
   $('[data-b1]').textContent = `${r.b1.points ?? '–'} / 600`;
@@ -198,6 +217,7 @@ function renderAll() {
   refresh();
 }
 
+syncView();
 renderAll();
 if (!reduced) gsap.from('[data-reveal]', { opacity: 0, y: 12, duration: 0.5, stagger: 0.08, ease: 'power2.out', clearProps: 'all' });
 if (!storageOk) say('Speichern ist in diesem Browser nicht möglich.');

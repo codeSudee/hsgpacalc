@@ -39,6 +39,10 @@ const faqs: Faq[] = [
     answer: 'Nach den KMK-Regeln brauchst du in Block I mindestens 200 Punkte. Höchstens 20 % der eingebrachten Halbjahresergebnisse dürfen unter 5 Punkten liegen und keines darf 0 Punkte haben. In Block II sind mindestens 100 Punkte nötig. Außerdem brauchst du bei 5 Prüfungsfächern in mindestens 3 Fächern (bei 4 Fächern in 2) jeweils 5 Punkte, davon eines auf erhöhtem Niveau.',
   },
   {
+    question: 'Wie rechne ich meine Abiturnote in einen US-GPA um?',
+    answer: 'Eine offizielle Umrechnung gibt es nicht. Üblich ist die modifizierte bayerische Formel: GPA ≈ 4,0 − (Note − 1) × 2/3. Eine 1,0 entspricht damit 4.0, eine 2,5 etwa 3.0 und eine 4,0 dem GPA 2.0. Im Rechner schaltest du dafür oben auf „US-GPA“ um.',
+  },
+  {
     question: 'Gilt der Abi-Rechner für jedes Bundesland?',
     answer: 'Die Formel für Block I, Block II und die Abiturnote ist bundesweit gleich. Unterschiede gibt es bei der Zahl der einzubringenden Kurse, den Pflichtkursen und der Gewichtung. Trag einfach genau die Kurse ein, die du einbringst. Verbindlich ist immer die Berechnung deiner Schule.',
   },
@@ -87,12 +91,19 @@ const faqs: Faq[] = [
 
         <aside class="flex flex-col gap-6 lg:sticky lg:top-6" aria-label="Ergebnis" data-reveal>
           <div class="card p-5" id="abi-result">
-            <h2 class="text-xl leading-7" style="letter-spacing:-0.02em">Dein Abiturschnitt</h2>
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h2 class="text-xl leading-7" style="letter-spacing:-0.02em">Dein Abiturschnitt</h2>
+              <div class="seg no-print" role="group" aria-label="Anzeigen als">
+                <button type="button" data-view="de" aria-pressed="true">Note</button>
+                <button type="button" data-view="us" aria-pressed="false">US-GPA</button>
+              </div>
+            </div>
             <p class="m-0 mt-3 flex items-baseline gap-3">
               <span class="num text-[56px] leading-none font-medium text-[var(--ink)]" data-grade>–</span>
               <span class="text-[13px] text-[var(--mute)]" data-total>Trage Punkte ein</span>
             </p>
             <p class="m-0 mt-3 text-[13px]" data-next></p>
+            <p class="m-0 mt-3 rounded-md bg-[var(--soft)] p-3 text-xs leading-5" data-us-note hidden>US-GPA (4,0-Skala) geschätzt mit der modifizierten bayerischen Formel: 1,0 = 4.0 und 4,0 = 2.0. Keine offizielle Umrechnung; US-Unis lassen Zeugnisse oft von Diensten wie WES bewerten.</p>
             <div class="mt-5 space-y-3 border-t border-[var(--hairline)] pt-4">
               <div>
                 <div class="flex justify-between text-[13px]"><span>Block I</span><span class="num" data-b1>– / 600</span></div>

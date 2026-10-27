@@ -42,7 +42,13 @@ const t = T.calc;
 
   <aside class="flex flex-col gap-6 lg:sticky lg:top-6" aria-label={t.results} data-reveal>
     <div class="card p-5">
-      <h2 class="mb-4 text-xl leading-7" style="letter-spacing:-0.02em">{t.yourGpa}</h2>
+      <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <h2 class="text-xl leading-7" style="letter-spacing:-0.02em">{t.yourGpa}</h2>
+        <div class="seg no-print" role="group" aria-label={t.viewGroup}>
+          <button type="button" data-view="us" aria-pressed="true">{t.viewUs}</button>
+          <button type="button" data-view="de" aria-pressed="false" lang="de">{t.viewDe}</button>
+        </div>
+      </div>
       <GpaGauge />
       <div class="mt-5 border-t border-[var(--hairline)] pt-4">
         <p class="eyebrow m-0 mb-2">{t.byYear}</p>

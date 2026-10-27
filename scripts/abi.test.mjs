@@ -58,3 +58,10 @@ assert.equal(m.examCount, 4); assert.equal(m.exams.length, 5); assert.equal(m.ex
 assert.equal(A.sanitize(null), null); assert.equal(A.sanitize({ subjects: [], exams: [] }), null);
 assert.equal(A.de(1.7), '1,7');
 console.log('abi sanity checks passed');
+
+// US ⇄ German conversion (modified Bavarian formula)
+const C = await import('../src/scripts/convert.ts');
+assert.equal(C.usToGerman(4), 1); assert.equal(C.usToGerman(4.8), 1); assert.equal(C.usToGerman(3.5), 1.7);
+assert.equal(C.usToGerman(3), 2.5); assert.equal(C.usToGerman(2), 4); assert.equal(C.usToGerman(0), 6);
+assert.equal(C.germanToUs(1), 4); assert.equal(C.germanToUs(2.5), 3); assert.equal(C.germanToUs(4), 2); assert.equal(C.germanToUs(1.8), 3.47);
+console.log('conversion checks passed');

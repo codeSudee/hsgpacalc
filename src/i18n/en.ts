@@ -82,6 +82,11 @@ export const en = {
     addClass: '+ Add Class',
     // gauge
     gaugeAria: 'GPA gauge from 0.0 to 4.0. Outer ring is weighted GPA, inner ring is unweighted GPA.',
+    viewGroup: 'Show grades as',
+    viewUs: 'US GPA',
+    viewDe: 'German grade',
+    ofDe: '1,0 = best',
+    deNote: 'German grade (Note) estimated with the modified Bavarian formula: 4.0 GPA = 1,0, 2.0 GPA = 4,0 (lowest pass). Weighted GPAs above 4.0 count as 1,0. An estimate, not an official conversion.',
     of40: 'of 4.0',
     gaugeEmpty: 'Add grades to see your GPA.',
     owlEmpty: "Add your grades and I'll cheer you on.",

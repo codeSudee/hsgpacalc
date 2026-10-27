@@ -22,7 +22,7 @@ const C2 = +(2 * Math.PI * R2).toFixed(2);
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
       <span class="eyebrow">{t.unweighted}</span>
       <span class="num text-[40px] leading-none font-medium tracking-tight text-[var(--ink)]" data-gpa-u>--</span>
-      <span class="num mt-1 text-xs text-[var(--mute)]">{t.of40}</span>
+      <span class="num mt-1 text-xs text-[var(--mute)]" data-of data-t-us={t.of40} data-t-de={t.ofDe}>{t.of40}</span>
     </div>
   </div>
   <dl class="grid w-full grid-cols-2 gap-3 text-center">
@@ -36,4 +36,5 @@ const C2 = +(2 * Math.PI * R2).toFixed(2);
     </div>
   </dl>
   <p class="m-0 text-xs text-[var(--mute)] num" data-gpa-meta>{t.gaugeEmpty}</p>
+  <p class="m-0 rounded-md bg-[var(--soft)] p-3 text-xs leading-5 text-[var(--body)]" data-de-note hidden>{t.deNote}</p>
 </div>

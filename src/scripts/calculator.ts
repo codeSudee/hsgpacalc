@@ -5,6 +5,7 @@ import {
   bonusFor, clampBonus, cumulative, decodeShare, encodeShare, fresh, gpa, letterFor, maxUnweighted, maxWeighted,
   newClass, newYear, prior, sanitize, toCsv, totals, uid,
 } from './gpa';
+import { usToGerman } from './convert';
 
 const KEY = 'hsgpa-v1';
 
@@ -145,12 +146,35 @@ function celebrate(w: number | null, animate: boolean) {
   wasGreat = great;
 }
 
+/* ---------- US GPA ⇄ German grade view ---------- */
+const VIEW_KEY = 'hsgpa-view';
+let view: 'us' | 'de' = 'us';
+try { if (localStorage.getItem(VIEW_KEY) === 'de') view = 'de'; } catch {}
+/** In the German view the readouts show the German grade (1,0 best) instead of the GPA. */
+function showGpa(el: Element, v: number | null, animate: boolean) {
+  if (view === 'us') return setNum(el, v, animate);
+  shown.delete(el);
+  el.textContent = v === null ? '–' : usToGerman(v).toFixed(1).replace('.', ',');
+}
+function syncView() {
+  document.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === view)));
+  const of = $('[data-of]');
+  of.textContent = (view === 'de' ? of.dataset.tDe : of.dataset.tUs) ?? '';
+  $('[data-de-note]').hidden = view !== 'de';
+}
+document.querySelectorAll<HTMLButtonElement>('[data-view]').forEach((b) => b.addEventListener('click', () => {
+  view = b.dataset.view === 'de' ? 'de' : 'us';
+  try { localStorage.setItem(VIEW_KEY, view); } catch {}
+  syncView();
+  refresh(false, false);
+}));
+
 function refresh(animate = true, persist = true) {
   const tot = all();
   const u = gpa(tot.qu, tot.cr), w = gpa(tot.qw, tot.cr);
-  setNum($('[data-gpa-u]'), u, animate);
-  setNum($('[data-gpa-u2]'), u, animate);
-  setNum($('[data-gpa-w]'), w, animate);
+  showGpa($('[data-gpa-u]'), u, animate);
+  showGpa($('[data-gpa-u2]'), u, animate);
+  showGpa($('[data-gpa-w]'), w, animate);
   setOwl(w, animate);
   celebrate(w, animate);
   const pr = prior(state);
@@ -518,6 +542,7 @@ tCredits.addEventListener('input', () => { state.tCredits = tCredits.value; refr
 tType.addEventListener('change', () => { state.tType = tType.value as 'u' | 'w'; refresh(false); });
 
 /* ---------- boot ---------- */
+syncView();
 syncSettings();
 renderAll();
 if (!reduced) {
