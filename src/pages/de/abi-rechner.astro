@@ -1,0 +1,199 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { faqSchema, type Faq } from '../../data/faqs';
+import { minTotalFor, de, HALF_YEARS } from '../../scripts/abi';
+
+const title = 'Abi-Rechner 2026: Abiturschnitt online berechnen';
+const description = 'Kostenloser Abi-Rechner: Berechne deinen Abiturschnitt aus Block I und Block II, mit Leistungskursen, 4 oder 5 Prüfungsfächern und allen Bestehensregeln. Ohne Anmeldung.';
+
+// Gesamtpunkte → Abiturnote, generated from the KMK formula (matches the official table).
+const grades = Array.from({ length: 31 }, (_, i) => Math.round((1 + i / 10) * 10) / 10);
+const gradeRows = grades.map((g) => ({ g, from: minTotalFor(g), to: g === 1 ? 900 : minTotalFor(Math.round((g - 0.1) * 10) / 10) - 1 }));
+const half = Math.ceil(gradeRows.length / 2);
+const pointRows: [string, string, string][] = [
+  ['15 / 14 / 13', '1+ / 1 / 1−', 'sehr gut'],
+  ['12 / 11 / 10', '2+ / 2 / 2−', 'gut'],
+  ['9 / 8 / 7', '3+ / 3 / 3−', 'befriedigend'],
+  ['6 / 5 / 4', '4+ / 4 / 4−', 'ausreichend'],
+  ['3 / 2 / 1', '5+ / 5 / 5−', 'mangelhaft'],
+  ['0', '6', 'ungenügend'],
+];
+
+const faqs: Faq[] = [
+  {
+    question: 'Wie berechnet man den Abiturschnitt?',
+    answer: 'Die Gesamtpunktzahl E setzt sich aus Block I (Kurse der Qualifikationsphase, max. 600 Punkte) und Block II (Abiturprüfungen, max. 300 Punkte) zusammen. Die Abiturnote ergibt sich aus N = 17/3 − E/180. Das Ergebnis wird nach der ersten Nachkommastelle abgeschnitten, nicht gerundet. Ab 823 Punkten gibt es die 1,0.',
+  },
+  {
+    question: 'Wie viele Punkte braucht man für ein 1,0-Abitur?',
+    answer: 'Für die Note 1,0 brauchst du mindestens 823 von 900 Punkten. Für eine 2,0 reichen 643 Punkte, für eine 3,0 genügen 463 Punkte. Mit 300 Punkten hast du das Abitur mit 4,0 bestanden.',
+  },
+  {
+    question: 'Zählen Leistungskurse doppelt?',
+    answer: 'In den meisten Bundesländern ja. Die KMK erlaubt, zwei oder drei Fächer auf erhöhtem Anforderungsniveau doppelt zu gewichten. Im Rechner setzt du dafür den Haken bei „LK“. Gilt in deinem Land keine Doppelgewichtung (z. B. in Bayern), lässt du den Haken weg.',
+  },
+  {
+    question: 'Wann ist das Abitur nicht bestanden?',
+    answer: 'Nach den KMK-Regeln brauchst du in Block I mindestens 200 Punkte. Höchstens 20 % der eingebrachten Halbjahresergebnisse dürfen unter 5 Punkten liegen und keines darf 0 Punkte haben. In Block II sind mindestens 100 Punkte nötig. Außerdem brauchst du bei 5 Prüfungsfächern in mindestens 3 Fächern (bei 4 Fächern in 2) jeweils 5 Punkte, davon eines auf erhöhtem Niveau.',
+  },
+  {
+    question: 'Gilt der Abi-Rechner für jedes Bundesland?',
+    answer: 'Die Formel für Block I, Block II und die Abiturnote ist bundesweit gleich. Unterschiede gibt es bei der Zahl der einzubringenden Kurse, den Pflichtkursen und der Gewichtung. Trag einfach genau die Kurse ein, die du einbringst. Verbindlich ist immer die Berechnung deiner Schule.',
+  },
+];
+---
+<Layout title={title} description={description} path="/de/abi-rechner/" type="app" enOnly>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema(faqs))} />
+  <SiteHeader />
+
+  <main id="main">
+    <section class="relative isolate overflow-hidden">
+      <div class="mesh" aria-hidden="true"></div>
+      <div class="wrap py-12 text-center md:py-16">
+        <p class="eyebrow m-0">Kostenlos · Privat · Ohne Anmeldung</p>
+        <h1 class="mx-auto mt-4 max-w-[16ch]">Abi-Rechner</h1>
+        <p class="mx-auto mt-4 mb-0 max-w-[60ch] text-base leading-6">Berechne deinen Abiturschnitt aus den Kursen der Qualifikationsphase (Block I) und deinen Abiturprüfungen (Block II). Mit Leistungskursen, 4 oder 5 Prüfungsfächern und Prüfung aller Bestehensregeln. Deine Punkte bleiben auf deinem Gerät.</p>
+      </div>
+    </section>
+
+    <div class="wrap pb-12">
+      <div id="calculator" class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_360px]" data-abi>
+        <div class="card p-4 md:p-6" data-reveal>
+          <div class="no-print mb-5 flex flex-wrap items-center gap-3">
+            <button type="button" class="btn" data-action="sample">Beispiel laden</button>
+            <button type="button" class="btn btn-danger ml-auto" data-action="reset">Zurücksetzen</button>
+          </div>
+
+          <h2 class="text-xl leading-7" style="letter-spacing:-0.02em">Block I: Qualifikationsphase</h2>
+          <p class="mt-1 mb-3 text-[13px] text-[var(--mute)]">Trage die Halbjahrespunkte (0–15) der Kurse ein, die du einbringst. Kurse mit Haken bei „LK“ zählen doppelt. Leere Felder werden nicht mitgezählt.</p>
+          <div class="abi-row abi-head" aria-hidden="true">
+            <span class="c-name">Fach</span><span>LK</span>{HALF_YEARS.map((h) => <span class="text-center">{h}</span>)}<span></span>
+          </div>
+          <div id="subjects"></div>
+          <button type="button" class="btn btn-primary no-print mt-4" data-action="add">+ Fach hinzufügen</button>
+
+          <div class="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--hairline)] pt-6">
+            <h2 class="text-xl leading-7" style="letter-spacing:-0.02em">Block II: Abiturprüfung</h2>
+            <div class="seg no-print" role="group" aria-label="Anzahl der Prüfungsfächer">
+              <button type="button" data-count="4" aria-pressed="false">4 Fächer (×5)</button>
+              <button type="button" data-count="5" aria-pressed="true">5 Fächer (×4)</button>
+            </div>
+          </div>
+          <p class="mt-1 mb-3 text-[13px] text-[var(--mute)]">Punkte je Prüfung in einfacher Wertung (0–15). Setze „eA“ bei Fächern auf erhöhtem Anforderungsniveau.</p>
+          <div id="exams"></div>
+        </div>
+
+        <aside class="flex flex-col gap-6 lg:sticky lg:top-6" aria-label="Ergebnis" data-reveal>
+          <div class="card p-5" id="abi-result">
+            <h2 class="text-xl leading-7" style="letter-spacing:-0.02em">Dein Abiturschnitt</h2>
+            <p class="m-0 mt-3 flex items-baseline gap-3">
+              <span class="num text-[56px] leading-none font-medium text-[var(--ink)]" data-grade>–</span>
+              <span class="text-[13px] text-[var(--mute)]" data-total>Trage Punkte ein</span>
+            </p>
+            <p class="m-0 mt-3 text-[13px]" data-next></p>
+            <div class="mt-5 space-y-3 border-t border-[var(--hairline)] pt-4">
+              <div>
+                <div class="flex justify-between text-[13px]"><span>Block I</span><span class="num" data-b1>– / 600</span></div>
+                <div class="bar"><span data-bar1></span></div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[13px]"><span>Block II</span><span class="num" data-b2>– / 300</span></div>
+                <div class="bar"><span data-bar2></span></div>
+              </div>
+            </div>
+            <div class="mt-5 border-t border-[var(--hairline)] pt-4">
+              <p class="eyebrow m-0 mb-2" data-status>Bestehensregeln</p>
+              <ul class="m-0 list-none space-y-1.5 p-0 text-[13px]" id="checks"></ul>
+            </div>
+            <p class="m-0 mt-4 text-xs text-[var(--mute)]">Berechnet nach der KMK-Vereinbarung. Einzelne Bundesländer haben strengere Zusatzregeln.</p>
+            <p class="sr-only" aria-live="polite" id="abi-live"></p>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <template id="tpl-subject">
+      <div class="abi-row">
+        <label class="c-name"><span class="lbl sm:sr-only">Fach</span><input class="field" data-k="name" maxlength="40" autocomplete="off" placeholder="z. B. Mathematik…" /></label>
+        <label class="chk" title="Leistungskurs: zählt doppelt"><input type="checkbox" data-k="lk" /><span>LK</span></label>
+        {HALF_YEARS.map((h, i) => (
+          <label><span class="lbl sm:sr-only">{h}</span><input class="field num text-center" data-k="hj" data-i={i} type="number" inputmode="numeric" min="0" max="15" step="1" autocomplete="off" /></label>
+        ))}
+        <button type="button" class="btn btn-icon btn-danger no-print" data-k="remove" aria-label="Fach entfernen">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+        </button>
+      </div>
+    </template>
+    <template id="tpl-exam">
+      <div class="exam-row">
+        <span class="text-[13px] font-medium text-[var(--ink)]" data-k="label"></span>
+        <label><span class="sr-only" data-k="name-lbl"></span><input class="field" data-k="name" maxlength="40" autocomplete="off" placeholder="Fach" /></label>
+        <label class="chk" title="erhöhtes Anforderungsniveau"><input type="checkbox" data-k="lk" /><span>eA</span></label>
+        <label><span class="sr-only" data-k="p-lbl"></span><input class="field num text-center" data-k="p" type="number" inputmode="numeric" min="0" max="15" step="1" autocomplete="off" placeholder="0–15" /></label>
+      </div>
+    </template>
+
+    <div class="wrap pb-16">
+      <article class="prose-page mx-auto max-w-[720px]" data-scroll-reveal>
+        <h2>So wird die Abiturnote berechnet</h2>
+        <p>Deine Abiturnote ergibt sich aus einer Gesamtpunktzahl von höchstens 900 Punkten. Grundlage ist die <a href="https://www.kmk.org/themen/allgemeinbildende-schulen/bildungswege-und-abschluesse/sekundarstufe-ii-gymnasiale-oberstufe-und-abitur.html" rel="noopener">Vereinbarung der Kultusministerkonferenz (KMK)</a> zur gymnasialen Oberstufe, die in allen Bundesländern gilt. Die Punkte stammen aus zwei Blöcken.</p>
+        <h3 class="mt-6">Block I: Kurse der Qualifikationsphase (max. 600 Punkte)</h3>
+        <p>In Block I zählen deine Halbjahresergebnisse aus Q1 und Q2. Alle eingebrachten Punkte P werden addiert und durch die Zahl der Ergebnisse S geteilt. Das Ergebnis wird mit 40 multipliziert und auf eine ganze Zahl gerundet:</p>
+        <p class="num rounded-md bg-[var(--soft)] px-4 py-3 text-[var(--ink)]">E<sub>I</sub> = P / S × 40</p>
+        <p>Leistungskurse zählen in den meisten Ländern doppelt: Ihre Punkte gehen zweimal in P ein und sie zählen auch zweimal in S. Mit 2 Leistungskursen und 32 Grundkursergebnissen ist S also 48. Für die Zulassung zur Prüfung brauchst du mindestens 200 Punkte. Höchstens 20 % deiner eingebrachten Kurse dürfen unter 5 Punkten liegen, und kein Kurs darf 0 Punkte haben.</p>
+        <h3 class="mt-6">Block II: Abiturprüfung (max. 300 Punkte)</h3>
+        <p>Bei 5 Prüfungsfächern zählt jede Prüfung vierfach, bei 4 Prüfungsfächern fünffach. So kommst du in beiden Fällen auf höchstens 300 Punkte. Du brauchst mindestens 100 Punkte. Bei 5 Fächern müssen mindestens 3 Prüfungen (bei 4 Fächern 2) jeweils 5 Punkte erreichen, davon mindestens eine auf erhöhtem Anforderungsniveau.</p>
+        <h3 class="mt-6">Von den Punkten zur Note</h3>
+        <p>Block I und Block II ergeben zusammen die Gesamtpunktzahl E. Die Abiturnote N berechnest du so:</p>
+        <p class="num rounded-md bg-[var(--soft)] px-4 py-3 text-[var(--ink)]">N = 17/3 − E / 180</p>
+        <p>Die Note wird nach der ersten Nachkommastelle abgeschnitten, nicht gerundet. 650 Punkte ergeben 2,05 und damit die Note 2,0. Ab 823 Punkten gibt es die 1,0. Unter 300 Punkten ist das Abitur nicht bestanden.</p>
+
+        <h2 id="tabelle">Umrechnungstabelle: Punkte in Abiturnote</h2>
+        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+          {[gradeRows.slice(0, half), gradeRows.slice(half)].map((rows) => (
+            <div class="card overflow-hidden">
+              <table class="tbl">
+                <thead><tr><th scope="col">Note</th><th scope="col">Gesamtpunkte</th></tr></thead>
+                <tbody>{rows.map((r) => <tr><td class="num">{de(r.g)}</td><td class="num">{r.from}–{r.to}</td></tr>)}</tbody>
+              </table>
+            </div>
+          ))}
+        </div>
+
+        <h2>Notenpunkte in Noten umrechnen</h2>
+        <p>In der Oberstufe bekommst du statt Noten von 1 bis 6 Punkte von 0 bis 15. Jede Note ist in drei Stufen geteilt:</p>
+        <div class="card mt-4 overflow-x-auto">
+          <table class="tbl">
+            <thead><tr><th scope="col">Punkte</th><th scope="col">Note</th><th scope="col">Bedeutung</th></tr></thead>
+            <tbody>{pointRows.map((r) => <tr><td class="num">{r[0]}</td><td class="num">{r[1]}</td><td>{r[2]}</td></tr>)}</tbody>
+          </table>
+        </div>
+        <p>Für einen einzelnen Kurs gilt als Faustregel: Note ≈ (17 − Punkte) / 3. 11 Punkte entsprechen also etwa einer 2,0.</p>
+
+        <h2>Unterschiede zwischen den Bundesländern</h2>
+        <p>Die Formeln oben gelten bundesweit. Die Länder legen aber selbst fest, wie viele Kurse du einbringen musst, welche davon Pflicht sind und ob Leistungskurse doppelt zählen. Bayern gewichtet zum Beispiel nicht doppelt, Nordrhein-Westfalen schon. Trag deshalb im Rechner genau die Kurse ein, die du einbringst. Mit der KMK-Reform von 2023 werden die Regeln weiter vereinheitlicht. Das erste Abitur nach den neuen Regeln wird spätestens 2030 abgelegt. Die Punkteformel bleibt dabei gleich.</p>
+        <p>Du willst dich an einer US-Uni bewerben? Mit unserem <a href="/" hreflang="en" lang="en">High School GPA Calculator</a> (Englisch) siehst du, wie ein amerikanischer GPA berechnet wird.</p>
+      </article>
+
+      <section aria-labelledby="faq-heading" class="mx-auto mt-16 w-full max-w-[720px]" data-scroll-reveal>
+        <h2 id="faq-heading">Häufige Fragen zum Abi-Rechner</h2>
+        <div class="mt-6 divide-y divide-[var(--hairline)] overflow-hidden rounded-xl border border-[var(--hairline)] bg-[var(--elevated)]">
+          {faqs.map((f) => (
+            <details class="group">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-left text-base font-medium text-[var(--ink)] transition-colors hover:bg-[var(--soft)] [&::-webkit-details-marker]:hidden">
+                <span>{f.question}</span>
+                <svg class="size-4 shrink-0 text-[var(--mute)] transition-transform duration-200 group-open:rotate-180" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg>
+              </summary>
+              <div class="px-5 pb-5 text-[15px] leading-relaxed text-[var(--body)]"><p>{f.answer}</p></div>
+            </details>
+          ))}
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <SiteFooter />
+  <script>import '../../scripts/abi-rechner.ts';</script>
+</Layout>

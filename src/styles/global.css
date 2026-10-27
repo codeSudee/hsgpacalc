@@ -140,6 +140,30 @@ table.tbl { width: 100%; border-collapse: collapse; }
 
 .live { display: block; min-height: 20px; }
 
+/* Abi-Rechner rows */
+.abi-row { border-top: 1px solid var(--hairline); padding: 12px 0; display: grid; gap: 8px; grid-template-columns: auto repeat(4, minmax(0, 1fr)) auto; align-items: end; }
+.abi-row .c-name { grid-column: 1 / -1; }
+.abi-head { display: none; }
+@media (min-width: 640px) {
+  .abi-row { grid-template-columns: minmax(0, 1fr) 56px repeat(4, 64px) 40px; align-items: center; padding: 8px 0; }
+  .abi-row .c-name { grid-column: auto; }
+  .abi-head { display: grid; border-top: 0; padding: 0 0 4px; font: 500 12px/16px var(--font-mono); color: var(--mute); text-transform: uppercase; letter-spacing: .04em; }
+}
+.exam-row { border-top: 1px solid var(--hairline); padding: 10px 0; display: grid; gap: 8px; grid-template-columns: minmax(0, 1fr) auto 72px; align-items: center; }
+.exam-row > :first-child { grid-column: 1 / -1; }
+@media (min-width: 640px) { .exam-row { grid-template-columns: 120px minmax(0, 1fr) auto 72px; } .exam-row > :first-child { grid-column: auto; } }
+.abi-row input[type="number"], .exam-row input[type="number"] { padding-inline: 4px; -moz-appearance: textfield; appearance: textfield; }
+.abi-row input[type="number"]::-webkit-inner-spin-button, .exam-row input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.field[aria-invalid="true"] { border-color: var(--error); }
+.bar { margin-top: 6px; height: 6px; border-radius: 6px; background: var(--track); overflow: hidden; }
+.bar > span { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--ring-weighted); }
+.check { display: flex; gap: 8px; }
+.check > :first-child { width: 14px; flex: none; text-align: center; font-weight: 600; }
+.check[data-ok="true"] > :first-child { color: #0a8a3a; }
+:root[data-theme="dark"] .check[data-ok="true"] > :first-child { color: #3ecf75; }
+.check[data-ok="false"] > :first-child, .check[data-ok="false"] { color: var(--error); }
+.check[data-ok="null"] { color: var(--mute); }
+
 .owl { width: 64px; height: 64px; flex: none; }
 .owl [data-p] { display: none; }
 .owl[data-pose="neutral"] [data-p~="neutral"],

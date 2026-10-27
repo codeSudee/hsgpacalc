@@ -5,7 +5,8 @@ const t = useT(lang);
 const other = lang === 'en' ? 'es' : 'en';
 const base = stripLocale(Astro.url.pathname);
 const path = base.replace(/\/$/, '') || '/';
-const switchHref = localePath(other, base);
+// German has no translated counterparts, so its switcher goes to the English home page.
+const switchHref = lang === 'de' ? '/' : localePath(other, base);
 const links = [
   { href: localePath(lang, '/about/'), base: '/about', label: t.header.about },
   { href: localePath(lang, '/contact/'), base: '/contact', label: t.header.contact },

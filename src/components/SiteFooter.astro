@@ -14,6 +14,7 @@ const links = [
   <div class="wrap flex flex-col gap-4 py-10 text-[13px]">
     <nav aria-label={t.footer.nav} class="flex flex-wrap gap-x-5 gap-y-2">
       {links.map((l) => <a href={l.href}>{l.label}</a>)}
+      {lang !== 'de' && <a href="/de/abi-rechner/" hreflang="de" lang="de">Abi-Rechner (Deutsch)</a>}
     </nav>
     {lang === 'en' && (
       <nav aria-label="Guides" class="flex flex-wrap gap-x-5 gap-y-2">

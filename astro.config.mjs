@@ -8,13 +8,13 @@ export default defineConfig({
   site: 'https://hsgpacalc.com',
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'es'],
+    locales: ['en', 'es', 'de'],
     routing: { prefixDefaultLocale: false },
   },
   integrations: [
     sitemap({
       filter: (page) => !page.includes('/404'),
-      i18n: { defaultLocale: 'en', locales: { en: 'en-US', es: 'es' } },
+      i18n: { defaultLocale: 'en', locales: { en: 'en-US', es: 'es', de: 'de-DE' } },
     }),
   ],
   vite: {

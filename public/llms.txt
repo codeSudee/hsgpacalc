@@ -1,10 +1,11 @@
 # HS GPA Calc
 
-> Free, private high school GPA calculator. Calculates weighted and unweighted GPA on 4.0, plus/minus and 4.33 scales with AP, Honors, IB and Dual Enrollment classes, per year and cumulative. Runs entirely in the browser; no sign-up. Available in English and Spanish.
+> Free, private high school GPA calculator. Calculates weighted and unweighted GPA on 4.0, plus/minus and 4.33 scales with AP, Honors, IB and Dual Enrollment classes, per year and cumulative. Runs entirely in the browser; no sign-up. Available in English and Spanish, plus a German Abitur calculator.
 
 ## Tool
 - [High School GPA Calculator](https://hsgpacalc.com/): the calculator, plus FAQ and what counts as a good GPA
 - [Calculadora de GPA (Español)](https://hsgpacalc.com/es/): Spanish version
+- [Abi-Rechner (Deutsch)](https://hsgpacalc.com/de/abi-rechner/): German Abitur grade calculator (Block I + Block II, KMK formula N = 17/3 − E/180)
 
 ## Guides
 - [How to Calculate Your High School GPA](https://hsgpacalc.com/how-to-calculate-gpa/): formula, credits, plus/minus, worked example
