@@ -209,3 +209,11 @@ table.tbl { width: 100%; border-collapse: collapse; }
 .lang-menu a { display: block; padding: 8px 10px; border-radius: 6px; color: var(--body); text-decoration: none; font-size: 14px; }
 .lang-menu a:hover { background: var(--soft); color: var(--ink); }
 .lang-menu a[aria-current] { color: var(--ink); font-weight: 500; }
+
+/* Reserve space for calculator parts that JS fills on load, so they don't push content down (CLS).
+   :empty stops applying once rendered. Heights match the default three-class view. */
+#years:empty { min-height: 941px; }
+#scale-note:empty { min-height: 40px; }
+@media (min-width: 1024px) { #years:empty { min-height: 387px; } }
+@media (max-width: 599px) { #scale-note:empty { min-height: 60px; } }
+@media (max-width: 420px) { #scale-note:empty { min-height: 80px; } }
