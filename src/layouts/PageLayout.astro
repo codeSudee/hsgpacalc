@@ -4,7 +4,7 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { useT } from '../i18n';
 
-interface Props { title: string; description: string; path: string; heading: string; updated?: string; noindex?: boolean; type?: 'page' | 'article'; enOnly?: boolean; published?: string; modified?: string; }
+interface Props { title: string; description: string; path: string; heading: string; updated?: string; noindex?: boolean; type?: 'page' | 'article' | 'app'; enOnly?: boolean; published?: string; modified?: string; }
 const { title, description, path, heading, updated, noindex, type = 'page', enOnly, published, modified } = Astro.props;
 const t = useT(Astro.currentLocale);
 ---

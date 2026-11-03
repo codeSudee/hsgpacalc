@@ -38,7 +38,7 @@ const faqs: Faq[] = [
   },
 ];
 ---
-<Layout title={title} description={description} path={path} type="app" alternates={alternates}>
+<Layout title={title} description={description} path={path} type="app" alternates={alternates} heading="Note in GPA umrechnen">
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema(faqs))} />
   <SiteHeader />
   <main id="main">

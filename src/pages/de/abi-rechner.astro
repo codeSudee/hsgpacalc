@@ -48,7 +48,7 @@ const faqs: Faq[] = [
   },
 ];
 ---
-<Layout title={title} description={description} path="/de/abi-rechner/" type="app" enOnly>
+<Layout title={title} description={description} path="/de/abi-rechner/" type="app" enOnly heading="Abi-Rechner">
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema(faqs))} />
   <SiteHeader />
 

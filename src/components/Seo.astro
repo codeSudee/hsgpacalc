@@ -63,9 +63,10 @@ const website = {
   publisher: { '@id': `${SITE_URL}/#org` },
 };
 const homeUrl = new URL(localePath(lang, '/'), SITE_URL).href;
+const isHome = canonical === homeUrl;
 const crumbs = [
   { name: SITE_NAME, item: homeUrl },
-  ...(type === 'app' ? [] : [{ name: heading ?? title, item: canonical }]),
+  ...(isHome ? [] : [{ name: heading ?? title, item: canonical }]),
 ];
 const breadcrumb = {
   '@type': 'BreadcrumbList',
@@ -75,9 +76,9 @@ const graph: object[] = [website, org];
 if (type === 'app') {
   graph.unshift({
     '@type': 'WebApplication',
-    '@id': `${SITE_URL}/#app`,
-    name: t.seo.appName,
-    alternateName: SITE_NAME,
+    '@id': `${canonical}#app`,
+    name: heading ?? t.seo.appName,
+    ...(isHome ? { alternateName: SITE_NAME } : {}),
     url: canonical,
     description,
     applicationCategory: 'EducationalApplication',
@@ -89,6 +90,7 @@ if (type === 'app') {
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
     publisher: { '@id': `${SITE_URL}/#org` },
   });
+  if (!isHome) graph.push(breadcrumb);
 } else {
   graph.unshift(
     type === 'article'
