@@ -1,23 +1,27 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 import GuideCta from '../components/GuideCta.astro';
-const rows = [
-  ['Regular / College Prep', '+0.0', '4.0', '3.0', '2.0'],
-  ['Honors / Accelerated', '+0.5', '4.5', '3.5', '2.5'],
-  ['AP, IB, Dual Enrollment', '+1.0', '5.0', '4.0', '3.0'],
-];
+import { SCALES, DEFAULT_HONORS, DEFAULT_AP } from '../scripts/gpa';
+const LETTERS = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F'];
+const withBonus = (letter: string, bonus: number) => { const p = SCALES.plus[letter]; return (p > 0 ? p + bonus : 0).toFixed(1); };
+const rows = LETTERS.map((l) => [l, withBonus(l, 0), withBonus(l, DEFAULT_HONORS), withBonus(l, DEFAULT_AP)]);
 ---
-<PageLayout type="article" enOnly published="2026-10-23" title="How Much Do AP and Honors Classes Add to GPA?" description="See how many GPA points AP, Honors, IB and Dual Enrollment classes add on a weighted scale, with a weight table, examples and how to match your school's policy." path="/ap-honors-gpa-weights/" heading="How Much Do AP and Honors Classes Add to Your GPA?">
-  <p>Weighted GPA rewards advanced coursework by adding bonus points. The most common system is +0.5 for Honors and +1.0 for AP, IB and Dual Enrollment. Your school may differ, so always confirm in your course handbook.</p>
+<PageLayout type="article" enOnly published="2026-10-23" modified="2026-11-03" title="Weighted GPA Scale: How Much AP & Honors Classes Add" description="A common weighted GPA scale adds +0.5 for Honors and +1.0 for AP, IB and Dual Enrollment. See what every grade is worth at each level, with examples." path="/ap-honors-gpa-weights/" heading="Weighted GPA Scale: How Much Do AP and Honors Classes Add?">
+  <p>Weighted GPA rewards advanced coursework by adding bonus points. A common system is +0.5 for Honors and +1.0 for AP, IB and Dual Enrollment. Your school may differ, so always confirm in your course handbook.</p>
 
-  <h2>Common weighting table</h2>
+  <h2>Weighted GPA scale chart</h2>
   <div class="overflow-x-auto">
     <table class="tbl">
-      <caption class="sr-only">Typical weighted GPA points by class level</caption>
-      <thead><tr><th scope="col">Class level</th><th scope="col">Bonus</th><th scope="col">A</th><th scope="col">B</th><th scope="col">C</th></tr></thead>
-      <tbody>{rows.map((r) => <tr><td>{r[0]}</td><td class="num">{r[1]}</td><td class="num">{r[2]}</td><td class="num">{r[3]}</td><td class="num">{r[4]}</td></tr>)}</tbody>
+      <caption class="sr-only">Grade points for each letter grade by class level, on a plus/minus scale</caption>
+      <thead><tr><th scope="col">Grade</th><th scope="col">Regular</th><th scope="col">Honors (+0.5)</th><th scope="col">AP, IB, DE (+1.0)</th></tr></thead>
+      <tbody>{rows.map((r) => <tr><td>{r[0]}</td><td class="num">{r[1]}</td><td class="num">{r[2]}</td><td class="num">{r[3]}</td></tr>)}</tbody>
     </table>
   </div>
+
+  <p>An F earns no bonus in this chart. An A+ usually counts the same as an A on this scale.</p>
+
+  <h2>Do Honors and AP classes boost your GPA?</h2>
+  <p>They can raise your weighted GPA, but not your unweighted GPA. The size of the boost depends on how many classes you take. With six equal 1-credit classes, one AP class adds 1.0 ÷ 6 = 0.17 to your weighted GPA compared with earning the same grade in a Regular class.</p>
 
   <h2>Variations you may see</h2>
   <ul>
