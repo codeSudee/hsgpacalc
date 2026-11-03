@@ -7,7 +7,7 @@ const rows = t.rows;
   <div class="p-5 md:p-6">
     <p class="eyebrow m-0">{t.eyebrow}</p>
     <h2 id="good-gpa-h" class="mt-2">{t.heading}</h2>
-    <p class="mt-2 mb-0 max-w-[60ch]">{t.intro}</p>
+    <p class="mt-2 mb-0 max-w-[60ch]">{t.intro}{Astro.currentLocale !== 'es' && <> <a href="/what-is-a-good-gpa/">See what each GPA means</a>.</>}</p>
   </div>
   <div class="overflow-x-auto">
     <table class="tbl">

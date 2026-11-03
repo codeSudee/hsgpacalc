@@ -5,9 +5,9 @@ export const en = {
   ogLocale: 'en_US',
   langName: 'English',
   seo: {
-    title: 'High School GPA Calculator: Weighted & Unweighted',
+    title: 'High School GPA Calculator: Weighted, AP & Cumulative',
     description:
-      'Free high school GPA calculator. Calculate weighted and unweighted GPA on a 4.0 scale with AP, Honors and credits. Fast, private, no sign-up.',
+      'Get your weighted and unweighted GPA by year and overall. Handles Honors, AP, IB and your school\'s own bonus rules, with a target GPA planner. Free, no sign-up.',
     appName: 'High School GPA Calculator',
     imageAlt: 'HS GPA Calc: free high school GPA calculator for weighted and unweighted GPA',
   },
@@ -24,7 +24,7 @@ export const en = {
   home: {
     eyebrow: 'Free · Private · No sign-up',
     h1: 'High School GPA Calculator',
-    lead: 'Calculate your weighted and unweighted GPA by year and for your whole high school career. Supports Honors, AP, IB and Dual Enrollment. Your data never leaves your device.',
+    lead: 'Calculate your weighted and unweighted GPA by year and for your whole high school career. Supports Honors, AP, IB and Dual Enrollment. Your grades stay in your browser.',
     pagesNav: 'Site pages',
   },
   calc: {
@@ -104,10 +104,10 @@ export const en = {
     thMeaning: 'What it means',
     rows: [
       { min: 3.9, max: 99, range: '3.9–4.0+', label: 'Exceptional', note: 'Competitive for the most selective colleges and top scholarships.' },
-      { min: 3.5, max: 3.9, range: '3.5–3.89', label: 'Excellent', note: 'Strong for most selective schools; on track for honor roll and merit aid.' },
-      { min: 3.0, max: 3.5, range: '3.0–3.49', label: 'Good', note: 'Above the national average (about 3.0). Solid for many public universities.' },
-      { min: 2.5, max: 3.0, range: '2.5–2.99', label: 'Average', note: 'Meets requirements for many colleges. Upward trend helps.' },
-      { min: 2.0, max: 2.5, range: '2.0–2.49', label: 'Below average', note: 'Community college and open-admission paths are open; focus on raising grades.' },
+      { min: 3.5, max: 3.9, range: '3.5–3.89', label: 'Excellent', note: 'Strong for many selective schools. May qualify for honor roll or merit aid, depending on the program.' },
+      { min: 3.0, max: 3.5, range: '3.0–3.49', label: 'Good', note: 'Around the national average, which was 3.11 in 2019. Solid for many public universities.' },
+      { min: 2.5, max: 3.0, range: '2.5–2.99', label: 'Fair', note: 'Below the national average, but meets requirements for many colleges. Upward trend helps.' },
+      { min: 2.0, max: 2.5, range: '2.0–2.49', label: 'Low', note: 'Community college and open-admission paths are open; focus on raising grades.' },
       { min: 0, max: 2.0, range: 'Below 2.0', label: 'Needs improvement', note: 'May affect graduation or eligibility. Talk to a counselor about a recovery plan.' },
     ],
   },

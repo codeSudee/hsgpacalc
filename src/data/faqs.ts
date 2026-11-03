@@ -22,7 +22,7 @@ export const faqs: Faq[] = [
   {
     question: 'What is a good high school GPA?',
     answer:
-      'On the unweighted 4.0 scale, a 3.0 is a solid B average, 3.5 or higher is considered strong, and 3.7 or above is competitive for selective colleges. The national average is roughly 3.0 to 3.4. What counts as good also depends on your goals and course rigor: a 3.6 with many AP classes can look better than a 4.0 with easier ones.',
+      'On the unweighted 4.0 scale, a 3.0 is a solid B average, 3.5 or higher is considered strong, and 3.7 or above is competitive for selective colleges. U.S. graduates averaged a 3.11 in 2019, according to the federal High School Transcript Study. What counts as good also depends on your goals and course rigor: a 3.6 with many AP classes can look better than a 4.0 with easier ones.',
   },
   {
     question: 'Can my GPA be higher than 4.0?',
@@ -75,7 +75,7 @@ export const faqsEs: Faq[] = [
   {
     question: '¿Qué es un buen GPA de high school?',
     answer:
-      'En la escala no ponderada de 4.0, un 3.0 es un promedio sólido de B, un 3.5 o más se considera fuerte y un 3.7 o más es competitivo para universidades selectivas. El promedio nacional ronda entre 3.0 y 3.4. Lo que se considera bueno también depende de tus metas y de la dificultad de tus clases: un 3.6 con muchas clases AP puede verse mejor que un 4.0 con clases más fáciles.',
+      'En la escala no ponderada de 4.0, un 3.0 es un promedio sólido de B, un 3.5 o más se considera fuerte y un 3.7 o más es competitivo para universidades selectivas. Los graduados de EE. UU. promediaron 3.11 en 2019, según el estudio federal High School Transcript Study. Lo que se considera bueno también depende de tus metas y de la dificultad de tus clases: un 3.6 con muchas clases AP puede verse mejor que un 4.0 con clases más fáciles.',
   },
   {
     question: '¿Mi GPA puede ser mayor que 4.0?',

@@ -25,7 +25,7 @@ export const es: Dict = {
   home: {
     eyebrow: 'Gratis · Privada · Sin registro',
     h1: 'Calculadora de GPA de High School',
-    lead: 'Calcula tu GPA ponderado y no ponderado por año y de toda tu carrera de high school. Compatible con clases de Honores, AP, IB e Inscripción Dual. Tus datos nunca salen de tu dispositivo.',
+    lead: 'Calcula tu GPA ponderado y no ponderado por año y de toda tu carrera de high school. Compatible con clases de Honores, AP, IB e Inscripción Dual. Tus notas se quedan en tu navegador.',
     pagesNav: 'Páginas del sitio',
   },
   calc: {
@@ -102,10 +102,10 @@ export const es: Dict = {
     thMeaning: 'Qué significa',
     rows: [
       { min: 3.9, max: 99, range: '3.9–4.0+', label: 'Excepcional', note: 'Competitivo para las universidades más selectivas y las mejores becas.' },
-      { min: 3.5, max: 3.9, range: '3.5–3.89', label: 'Excelente', note: 'Sólido para la mayoría de las universidades selectivas; encaminado al cuadro de honor y a becas por mérito.' },
-      { min: 3.0, max: 3.5, range: '3.0–3.49', label: 'Bueno', note: 'Por encima del promedio nacional (cerca de 3.0). Sólido para muchas universidades públicas.' },
-      { min: 2.5, max: 3.0, range: '2.5–2.99', label: 'Promedio', note: 'Cumple los requisitos de muchas universidades. Una tendencia al alza ayuda.' },
-      { min: 2.0, max: 2.5, range: '2.0–2.49', label: 'Por debajo del promedio', note: 'Los community colleges y las universidades de admisión abierta son una opción; enfócate en subir tus notas.' },
+      { min: 3.5, max: 3.9, range: '3.5–3.89', label: 'Excelente', note: 'Sólido para muchas universidades selectivas. Puede calificar para el cuadro de honor o becas por mérito, según el programa.' },
+      { min: 3.0, max: 3.5, range: '3.0–3.49', label: 'Bueno', note: 'Cerca del promedio nacional, que fue de 3.11 en 2019. Sólido para muchas universidades públicas.' },
+      { min: 2.5, max: 3.0, range: '2.5–2.99', label: 'Regular', note: 'Por debajo del promedio nacional, pero cumple los requisitos de muchas universidades. Una tendencia al alza ayuda.' },
+      { min: 2.0, max: 2.5, range: '2.0–2.49', label: 'Bajo', note: 'Los community colleges y las universidades de admisión abierta son una opción; enfócate en subir tus notas.' },
       { min: 0, max: 2.0, range: 'Menos de 2.0', label: 'Necesita mejorar', note: 'Puede afectar tu graduación o tu elegibilidad. Habla con un consejero sobre un plan de recuperación.' },
     ],
   },
