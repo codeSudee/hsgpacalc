@@ -1,0 +1,58 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import GuideCta from '../components/GuideCta.astro';
+const rows = [
+  ['4.0', 'Straight A', 'The top of the unweighted scale. Excellent anywhere, though selective colleges also weigh how hard your classes were.'],
+  ['3.8', 'Between A- and A', 'Very strong. Well above the national average.'],
+  ['3.7', 'A-', 'Very strong. Mostly A grades with a few lower ones.'],
+  ['3.5', 'Between B+ and A-', 'Strong. A mix of A and B grades, and clearly above average.'],
+  ['3.3', 'B+', 'Good. Slightly above the national average.'],
+  ['3.0', 'B', 'Solid, and just under the 3.11 national average.'],
+  ['2.5', 'Between C+ and B-', 'Below average. Many colleges are still open to you, and rising grades help.'],
+  ['2.0', 'C', 'Well below average. Some schools set a minimum near here for activities or graduation, so check your school\'s rules.'],
+];
+---
+<PageLayout type="article" enOnly published="2026-11-03" updated="November 3, 2026" title="What Is a Good GPA in High School? Is 3.0, 3.5 or 3.7 Good?" description="A 3.0 or higher is generally good: the average U.S. graduate earned a 3.11. See what a 2.5, 3.0, 3.5, 3.7, 3.8 and 4.0 GPA mean, weighted and unweighted." path="/what-is-a-good-gpa/" heading="What Is a Good GPA in High School?">
+  <p>A good high school GPA is generally <strong>3.0 or higher</strong> on the unweighted 4.0 scale. U.S. high school graduates averaged a <strong>3.11</strong> in 2019, the most recent year in the federal <a href="https://nces.ed.gov/use-work/resource-library/report/statistical-analysis-report/2019-naep-high-school-transcript-study" rel="noopener">High School Transcript Study</a>. That makes a 3.0 about average and a 3.5 well above it. What counts as good for you depends on where you plan to apply.</p>
+
+  <h2>Is my GPA good? A quick chart</h2>
+  <p>These are unweighted GPAs, compared with the 3.11 national average. The ratings are our own plain-English guide, not an official standard.</p>
+  <div class="overflow-x-auto">
+    <table class="tbl">
+      <caption class="sr-only">What common unweighted GPAs mean</caption>
+      <thead><tr><th scope="col">GPA</th><th scope="col">About a</th><th scope="col">What it means</th></tr></thead>
+      <tbody>{rows.map((r) => <tr><td class="num">{r[0]}</td><td>{r[1]}</td><td class="min-w-[220px]">{r[2]}</td></tr>)}</tbody>
+    </table>
+  </div>
+
+  <h2>Is a 3.0 GPA good?</h2>
+  <p>A 3.0 is a B average and sits just below the national average of 3.11. It is a respectable number that meets the stated minimum at many colleges. It may be below the typical admitted student at more selective ones.</p>
+
+  <h2>Is a 3.5 GPA good?</h2>
+  <p>Yes. A 3.5 is well above average and means you are earning a mix of A and B grades. For most students it keeps a wide range of colleges open.</p>
+
+  <h2>Is a 3.7 or 3.8 GPA good?</h2>
+  <p>Yes, both are very strong. A 3.7 equals an A- average, and a 3.8 is a little higher. At the most selective colleges, many applicants have similar grades, so course rigor and the rest of your application carry a lot of weight.</p>
+
+  <h2>Is a 4.0 GPA good?</h2>
+  <p>An unweighted 4.0 is the highest you can earn on that scale, so yes. A weighted 4.0 is different: it can include bonus points, so the same number might reflect an unweighted average closer to 3.5. Check which one you are looking at.</p>
+
+  <h2>Is a 2.5 GPA good?</h2>
+  <p>A 2.5 is below the national average, falling between a C+ and a B-. It does not close the door on college. Community colleges and many open-admission schools remain options, and a clear upward trend helps your case. Use the <a href="/raise-gpa-calculator/">raise GPA calculator</a> to see what your next grades would need to be.</p>
+
+  <h2>What about a good weighted GPA?</h2>
+  <p>Weighted scales differ by school, so a weighted number means little without context. A 4.2 at a school that gives +1.0 for AP could be a very different record from a 4.2 at a school with smaller bonuses. Compare your unweighted GPA to national figures, and see <a href="/weighted-vs-unweighted-gpa/">weighted vs unweighted GPA</a> for how the two differ.</p>
+
+  <h2>How to tell what is good for your colleges</h2>
+  <ul>
+    <li><strong>Look up each college.</strong> Many publish a Common Data Set with the GPA ranges of admitted students, or share them on their admissions pages.</li>
+    <li><strong>Expect recalculation.</strong> The <a href="https://bigfuture.collegeboard.org/plan-for-college/college-basics/how-to-convert-gpa-4.0-scale" rel="noopener">College Board notes</a> that colleges may recalculate GPA, removing noncore classes or adjusting weighting for AP and honors.</li>
+    <li><strong>Ask your counselor.</strong> They know how your school's grades compare and where recent graduates were admitted.</li>
+  </ul>
+
+  <h2>Grades have risen over time</h2>
+  <p>The same federal study found the average GPA climbed from 2.68 in 1990 to 3.00 in 2009 and 3.11 in 2019, <a href="https://www.k12dive.com/news/10-year-study-gpas-course-rigor-rising-for-high-school-grads/620559/" rel="noopener">as K-12 Dive reported</a>. A GPA that looked high to a parent's generation may be closer to the middle today.</p>
+
+  <p>Not sure what yours is? The <a href="/#calculator">high school GPA calculator</a> shows your weighted and unweighted GPA from your classes.</p>
+  <GuideCta current="/what-is-a-good-gpa/" />
+</PageLayout>
