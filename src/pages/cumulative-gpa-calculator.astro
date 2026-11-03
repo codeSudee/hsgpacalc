@@ -1,0 +1,93 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import GuideCta from '../components/GuideCta.astro';
+const starter = ['Term 1', 'Term 2', 'Term 3'];
+---
+<PageLayout type="app" enOnly title="Cumulative GPA Calculator: Combine Semesters & Years" description="Already know your GPA for each semester or year? Enter each GPA with its credits to get your cumulative GPA, weighted correctly by credits. Free, no sign-up." path="/cumulative-gpa-calculator/" heading="Cumulative GPA Calculator">
+  <p>Combine the GPAs you already have from past semesters or school years into one cumulative GPA. Enter each term's GPA and the credits it covers. Blank rows are ignored.</p>
+
+  <form id="calculator" class="card not-prose mt-6 p-5 md:p-6" data-cum autocomplete="off" onsubmit="return false">
+    <div class="grid grid-cols-[1fr_5.5rem_5.5rem] gap-3 text-xs" aria-hidden="true">
+      <span class="lbl m-0">Term</span><span class="lbl m-0">GPA</span><span class="lbl m-0">Credits</span>
+    </div>
+    <div class="mt-1 grid gap-2" data-rows>
+      {starter.map((name) => (
+        <div class="grid grid-cols-[1fr_5.5rem_5.5rem] gap-3" data-row>
+          <input class="field" aria-label="Term name" value={name} maxlength="30" />
+          <input class="field num" aria-label="GPA" data-gpa type="text" inputmode="decimal" placeholder="3.40" maxlength="5" />
+          <input class="field num" aria-label="Credits" data-credits type="text" inputmode="decimal" placeholder="6" maxlength="5" />
+        </div>
+      ))}
+    </div>
+    <button type="button" class="btn mt-3" data-add>Add term</button>
+    <div class="mt-5 min-h-[146px] rounded-md bg-[var(--soft)] p-4" aria-live="polite">
+      <p class="eyebrow m-0">Cumulative GPA</p>
+      <p class="num m-0 mt-1 text-[44px] leading-none font-medium text-[var(--ink)]" data-out>–</p>
+      <p class="m-0 mt-2 text-[13px]" data-msg>Your result appears here as you type.</p>
+    </div>
+  </form>
+
+  <h2>How to calculate cumulative GPA</h2>
+  <p>Multiply each term's GPA by its credits, add the results, and divide by your total credits.</p>
+  <p class="num rounded-md bg-[var(--soft)] px-4 py-3 text-[var(--ink)]">Cumulative GPA = (GPA₁ × credits₁ + GPA₂ × credits₂ + …) ÷ total credits</p>
+  <p>For example, a 3.40 on 6 credits in 9th grade and a 3.80 on 7 credits in 10th grade:</p>
+  <ul>
+    <li>3.40 × 6 = 20.4 grade points</li>
+    <li>3.80 × 7 = 26.6 grade points</li>
+    <li>(20.4 + 26.6) ÷ 13 credits = <strong>3.62</strong></li>
+  </ul>
+
+  <h2>Why you should not just average your GPAs</h2>
+  <p>Averaging 3.40 and 3.80 gives 3.60, but the correct answer above is 3.62, because the second year had more credits. The gap is small here and grows when terms differ more. A simple average only works when every term has the same number of credits.</p>
+
+  <h2>Questions about your cumulative GPA</h2>
+  <ul>
+    <li><strong>Should I mix weighted and unweighted?</strong> No. Use all weighted or all unweighted GPAs, or the result will not mean much.</li>
+    <li><strong>What credits should I use?</strong> The credit values on your transcript. If you do not have them and every term has the same course load, enter the same number on each row.</li>
+    <li><strong>Why doesn't it match my transcript?</strong> Rounded term GPAs, repeated classes and classes your school excludes can all cause small differences. Your transcript is the official number.</li>
+    <li><strong>Does this work for a transfer student?</strong> It gives an estimate, but your new school decides how to count earlier grades, so ask your counselor.</li>
+  </ul>
+  <p>Do not have your term GPAs yet? The <a href="/#calculator">high school GPA calculator</a> works them out class by class. To plan ahead, try the <a href="/raise-gpa-calculator/">raise GPA calculator</a>, or read the full guide on <a href="/how-to-calculate-gpa/">how to calculate GPA</a>.</p>
+  <GuideCta current="/cumulative-gpa-calculator/" />
+</PageLayout>
+<script>
+  import { cumulativeGpa, type Term } from '../scripts/gpa-tools';
+  const MAX_ROWS = 16;
+  const form = document.querySelector<HTMLFormElement>('[data-cum]')!;
+  const rows = form.querySelector<HTMLElement>('[data-rows]')!;
+  const add = form.querySelector<HTMLButtonElement>('[data-add]')!;
+  const out = form.querySelector<HTMLElement>('[data-out]')!;
+  const msg = form.querySelector<HTMLElement>('[data-msg]')!;
+  const num = (v: string) => (/^\d*\.?\d+$/.test(v.trim()) ? Number(v) : NaN);
+  function render() {
+    const terms: Term[] = []; let bad = false, big = false;
+    rows.querySelectorAll<HTMLElement>('[data-row]').forEach((row) => {
+      const g = row.querySelector<HTMLInputElement>('[data-gpa]')!.value, c = row.querySelector<HTMLInputElement>('[data-credits]')!.value;
+      if (!g.trim() && !c.trim()) return;
+      const gpa = num(g), credits = num(c);
+      if (Number.isNaN(gpa) || Number.isNaN(credits)) { bad = true; return; }
+      if (gpa > 7) big = true;
+      terms.push({ gpa, credits });
+    });
+    const result = cumulativeGpa(terms);
+    if (bad || big || result === null) {
+      out.textContent = '–';
+      msg.textContent = big ? 'Enter a GPA of 7.0 or below.' : bad ? 'Each term needs both a GPA and credits.' : 'Your result appears here as you type.';
+      return;
+    }
+    const total = terms.reduce((sum, t) => sum + t.credits, 0);
+    out.textContent = result.toFixed(2);
+    msg.textContent = `Across ${total} credits in ${terms.length} ${terms.length === 1 ? 'term' : 'terms'}.`;
+  }
+  add.addEventListener('click', () => {
+    const list = rows.querySelectorAll('[data-row]');
+    if (list.length >= MAX_ROWS) return;
+    const row = list[list.length - 1].cloneNode(true) as HTMLElement;
+    const [name, gpa, credits] = Array.from(row.querySelectorAll('input'));
+    name.value = `Term ${list.length + 1}`; gpa.value = ''; credits.value = '';
+    rows.append(row);
+    if (list.length + 1 >= MAX_ROWS) add.disabled = true;
+    gpa.focus();
+  });
+  form.addEventListener('input', render);
+</script>

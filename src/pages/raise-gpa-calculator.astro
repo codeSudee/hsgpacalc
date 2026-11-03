@@ -1,0 +1,66 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import GuideCta from '../components/GuideCta.astro';
+---
+<PageLayout type="app" enOnly title="Raise GPA Calculator: What Grades Do You Need?" description="Enter your current GPA, credits and goal to see the average you need next term, and the highest GPA you can reach with straight A's. Free, no sign-up." path="/raise-gpa-calculator/" heading="Raise GPA Calculator">
+  <p>Find the average you need on your next classes to reach a target GPA. Use your unweighted GPA and transcript credits, which you can find on your report card or transcript.</p>
+
+  <form id="calculator" class="card not-prose mt-6 p-5 md:p-6" data-raise autocomplete="off" onsubmit="return false">
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="block"><span class="lbl">Current GPA</span><input class="field num" name="current" type="text" inputmode="decimal" placeholder="e.g. 3.00" maxlength="5" /></label>
+      <label class="block"><span class="lbl">Credits completed</span><input class="field num" name="credits" type="text" inputmode="decimal" placeholder="e.g. 12" maxlength="5" /></label>
+      <label class="block"><span class="lbl">Target GPA</span><input class="field num" name="target" type="text" inputmode="decimal" placeholder="e.g. 3.30" maxlength="5" /></label>
+      <label class="block"><span class="lbl">Credits you will take next</span><input class="field num" name="next" type="text" inputmode="decimal" placeholder="e.g. 6" maxlength="5" /></label>
+    </div>
+    <div class="mt-5 min-h-[200px] rounded-md bg-[var(--soft)] p-4" aria-live="polite">
+      <p class="eyebrow m-0">Average you need</p>
+      <p class="num m-0 mt-1 text-[44px] leading-none font-medium text-[var(--ink)]" data-need>–</p>
+      <p class="m-0 mt-2 text-[13px]" data-msg>Your result appears here as you type.</p>
+    </div>
+  </form>
+
+  <h2>How the calculation works</h2>
+  <p>Your GPA is total grade points divided by total credits, so the average you need is:</p>
+  <p class="num rounded-md bg-[var(--soft)] px-4 py-3 text-[var(--ink)]">Needed = (target × all credits − current × credits so far) ÷ next credits</p>
+
+  <h2>Why raising your GPA gets harder over time</h2>
+  <p>Each new class is averaged with everything before it, so the more credits you have, the less one term can move your GPA. Compare two students who both have a 3.0 and want a 3.3, each taking 6 more credits:</p>
+  <ul>
+    <li><strong>12 credits so far:</strong> they need a 3.90 average next term. Straight A's would take them to 3.33.</li>
+    <li><strong>24 credits so far:</strong> they would need a 4.50, which is not possible on an unweighted scale. Straight A's reach 3.20.</li>
+  </ul>
+  <p>That is why a goal may take more than one term. Try a larger number in the next-credits box to see how many it would take.</p>
+
+  <h2>How to raise your GPA in high school</h2>
+  <ul>
+    <li><strong>Focus on full-credit classes.</strong> A 1.0-credit class moves your GPA twice as much as a 0.5-credit one.</li>
+    <li><strong>Get help early.</strong> Going to office hours and turning in every assignment is easier than recovering after a low midterm.</li>
+    <li><strong>Ask about retakes.</strong> Some schools replace or average a repeated class, and others keep both grades. The rules are in your handbook.</li>
+    <li><strong>Consider weighting carefully.</strong> Honors and AP classes can raise a weighted GPA, but they do not help your unweighted GPA unless your grades rise. See <a href="/ap-honors-gpa-weights/">how much AP and Honors add</a>.</li>
+    <li><strong>Keep the goal realistic.</strong> A steady upward trend still shows growth, even when the cumulative number moves slowly.</li>
+  </ul>
+  <p>To check a specific schedule class by class, use the <a href="/#calculator">high school GPA calculator</a>. To combine past terms, use the <a href="/cumulative-gpa-calculator/">cumulative GPA calculator</a>.</p>
+  <GuideCta current="/raise-gpa-calculator/" />
+</PageLayout>
+<script>
+  import { requiredGpa, gpaAfter } from '../scripts/gpa-tools';
+  import { letterFor } from '../scripts/gpa';
+  const form = document.querySelector<HTMLFormElement>('[data-raise]')!;
+  const needEl = form.querySelector<HTMLElement>('[data-need]')!;
+  const msgEl = form.querySelector<HTMLElement>('[data-msg]')!;
+  const num = (name: string) => { const v = (form.elements.namedItem(name) as HTMLInputElement).value.trim(); return /^\d*\.?\d+$/.test(v) ? Number(v) : NaN; };
+  function render() {
+    const current = num('current'), credits = num('credits'), target = num('target'), next = num('next');
+    if ([current, credits, target, next].some(Number.isNaN)) { needEl.textContent = '–'; msgEl.textContent = 'Your result appears here as you type.'; return; }
+    if (current > 4 || target > 4) { needEl.textContent = '–'; msgEl.textContent = 'This tool uses the unweighted 4.0 scale, so enter GPAs of 4.0 or below.'; return; }
+    if (!(next > 0)) { needEl.textContent = '–'; msgEl.textContent = 'Enter more than 0 upcoming credits.'; return; }
+    const need = requiredGpa(current, credits, target, next);
+    const best = gpaAfter(current, credits, 4, next).toFixed(2);
+    if (need <= 0) { needEl.textContent = '0.00'; msgEl.textContent = 'You will reach this target whatever grades you earn next term.'; return; }
+    needEl.textContent = need.toFixed(2);
+    msgEl.textContent = need > 4
+      ? `Not reachable in ${next} credits. Straight A's would take you to ${best}.`
+      : `About ${/^[AF]/.test(letterFor('plus', need)) ? 'an' : 'a'} ${letterFor('plus', need)} average across your next ${next} credits. Straight A's would take you to ${best}.`;
+  }
+  form.addEventListener('input', render);
+</script>
