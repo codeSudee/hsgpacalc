@@ -139,7 +139,7 @@ function celebrate(w: number | null, animate: boolean) {
     import('canvas-confetti').then(({ default: confetti }) => confetti({
       particleCount: 36, spread: 70, startVelocity: 24, ticks: 110, gravity: 1.1, scalar: 0.8,
       origin: { x: (r.left + r.width / 2) / innerWidth, y: (r.top + r.height / 2) / innerHeight },
-      colors: [css.getPropertyValue('--ring-weighted').trim() || '#0070f3', css.getPropertyValue('--ink').trim() || '#171717', '#50e3c2'],
+      colors: [css.getPropertyValue('--ring-weighted').trim() || '#5645d4', css.getPropertyValue('--ink').trim() || '#171717', '#ffb86b'],
       disableForReducedMotion: true,
     }));
   }
