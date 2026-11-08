@@ -52,7 +52,7 @@ const links = [
   document.getElementById('theme-toggle')?.addEventListener('click', () => {
     const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
-    document.querySelectorAll('meta[name=theme-color]').forEach((m) => m.setAttribute('content', next === 'dark' ? '#0b1020' : '#ffffff'));
+    document.querySelectorAll('meta[name=theme-color]').forEach((m) => m.setAttribute('content', next === 'dark' ? '#191919' : '#ffffff'));
     try { localStorage.setItem('hsgpa-theme', next); } catch {}
   });
   // Close the language menu on outside click or Escape.

@@ -168,7 +168,7 @@ function celebrate(g: number | null) {
     import('canvas-confetti').then(({ default: confetti }) => confetti({
       particleCount: 40, spread: 70, startVelocity: 24, ticks: 110, gravity: 1.1, scalar: 0.8,
       origin: { x: (r.left + r.width / 2) / innerWidth, y: (r.top + r.height / 2) / innerHeight },
-      colors: ['#5645d4', '#070f24', '#ffb86b'], disableForReducedMotion: true,
+      colors: ['#0075de', '#0d0d0d', '#1aae39'], disableForReducedMotion: true,
     }));
   }
   wasTop = top;
